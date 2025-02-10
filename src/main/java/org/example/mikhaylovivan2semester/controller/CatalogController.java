@@ -51,11 +51,13 @@ public class CatalogController {
     return ResponseEntity.ok(new Response<>(catalog));
   }
 
-  @PutMapping("/delete")
-  public void deleteByName(@RequestParam UUID userId, @RequestParam String name) {
+  @DeleteMapping("/delete")
+  public ResponseEntity<Response<Void>> deleteByName(@RequestParam UUID userId, @RequestParam String name) {
     log.info("Получен запрос на удаление категории по имени для пользователя с ID: {} и именем: {}", userId, name);
     catalogService.deleteByName(userId, name);
+    return ResponseEntity.ok(new Response<>(200, "Категория успешно удалена"));
   }
+
 
   @PutMapping("/addToUser")
   public ResponseEntity<Response<Catalog>> addToUser(@RequestParam UUID userId, @RequestParam String name) {
