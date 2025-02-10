@@ -43,9 +43,9 @@ public class CatalogRepository {
     return addToUser(userId, name);
   }
 
-  public boolean existsByName(UUID userId, String name) {
-    logger.info("Проверка существования каталога {} для userId: {}", name, userId);
-    return getByName(userId, name).isPresent();
+  public boolean existsByName(String name) {
+    logger.info("Проверка существования каталога {}", name);
+    return catalogs.values().stream().anyMatch(catalog -> catalog.name().equalsIgnoreCase(name));
   }
 
   public List<Catalog> getBasicCatalogs() {

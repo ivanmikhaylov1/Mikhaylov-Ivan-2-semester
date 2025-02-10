@@ -16,7 +16,7 @@ public class WebsiteController {
     private static final Logger logger = LoggerFactory.getLogger(WebsiteController.class);
     private final WebsiteService websiteService = new WebsiteService();
 
-    @GetMapping
+    @GetMapping("/basic")
     public List<Website> getBasicWebsites() {
         logger.info("Получен запрос на получение базовых сайтов");
         return websiteService.getBasicWebsites();

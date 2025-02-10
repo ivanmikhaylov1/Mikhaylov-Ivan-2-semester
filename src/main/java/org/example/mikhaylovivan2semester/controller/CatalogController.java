@@ -33,9 +33,9 @@ public class CatalogController {
   }
 
   @GetMapping("/exists")
-  public boolean existsByName(@RequestParam UUID userId, @RequestParam String name) {
-    logger.info("Получен запрос на проверку существования категории по названию для пользователя с ID: {} и именем: {}", userId, name);
-    return catalogService.existsByName(userId, name);
+  public boolean existsByName(@RequestParam String name) {
+    logger.info("Получен запрос на проверку существования категории по названию c именем: {}", name);
+    return catalogService.existsByName(name);
   }
 
   @GetMapping("/name")

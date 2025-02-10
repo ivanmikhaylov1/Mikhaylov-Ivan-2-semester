@@ -23,7 +23,7 @@ public class ArticleController {
   }
 
   @PostMapping
-  public void saveArticle(Article article) {
+  public void saveArticle(@RequestBody Article article) {
     logger.info("Получен запрос на сохранение статьи");
     articleService.saveArticle(article);
   }
@@ -40,9 +40,9 @@ public class ArticleController {
     return articleService.getUserLastRequestTime(userId);
   }
 
-  @PostMapping("/category")
+  @PostMapping("/user/category")
   public void saveArticleCategory(UUID articleId, UUID catalogId, UUID websiteId) {
-    logger.info("Получен запрос на сохранение интересующей пользователя категории");
+    logger.info("Получен запрос на сохранение категории статьи");
     articleService.saveArticleCategory(articleId, catalogId, websiteId);
   }
 }

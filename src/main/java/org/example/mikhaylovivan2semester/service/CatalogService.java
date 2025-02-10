@@ -35,9 +35,9 @@ public class CatalogService {
     return catalogRepository.addUserCatalog(userId, name);
   }
 
-  public boolean existsByName(UUID userId, String name) {
-    logger.info("Вызван метод existsByName для пользователя с ID: {} и категории: {}", userId, name);
-    return catalogRepository.existsByName(userId, name);
+  public boolean existsByName(String name) {
+    logger.info("Вызван метод existsByName для пользователя с ID: {} и категории: {}", name);
+    return catalogRepository.existsByName(name);
   }
 
   public List<Catalog> getBasicCatalogs() {
