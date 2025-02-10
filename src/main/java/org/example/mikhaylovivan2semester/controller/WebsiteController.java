@@ -1,54 +1,80 @@
 package org.example.mikhaylovivan2semester.controller;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.extern.slf4j.Slf4j;
+import org.example.mikhaylovivan2semester.entity.Response;
 import org.example.mikhaylovivan2semester.entity.Website;
-import org.example.mikhaylovivan2semester.service.WebsiteService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.example.mikhaylovivan2semester.service.interfaces.WebsiteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/websites")
+@Validated
 public class WebsiteController {
-    private static final Logger logger = LoggerFactory.getLogger(WebsiteController.class);
-    private final WebsiteService websiteService = new WebsiteService();
+    private final WebsiteService websiteService;
+
+    @Autowired
+    public WebsiteController(WebsiteService websiteService) {
+        this.websiteService = websiteService;
+    }
 
     @GetMapping("/basic")
-    public List<Website> getBasicWebsites() {
-        logger.info("Получен запрос на получение базовых сайтов");
-        return websiteService.getBasicWebsites();
+    public ResponseEntity<Response<List<Website>>> getBasicWebsites() {
+        log.info("Получен запрос на получение базовых сайтов");
+        List<Website> websites = websiteService.getBasicWebsites();
+        return ResponseEntity.ok(new Response<>(websites));
     }
 
     @GetMapping("/user/{userId}")
-    public List<Website> getUserWebsites(@PathVariable UUID userId) {
-        logger.info("Получен запрос на получение сайтов пользователя с ID: {}", userId);
-        return websiteService.getUserWebsites(userId);
+    public ResponseEntity<Response<List<Website>>> getUserWebsites(@PathVariable UUID userId) {
+        log.info("Получен запрос на получение сайтов пользователя с ID: {}", userId);
+        List<Website> websites = websiteService.getUserWebsites(userId);
+        return ResponseEntity.ok(new Response<>(websites));
     }
 
     @PostMapping("/user/{userId}")
-    public Website addUserWebsite(@PathVariable UUID userId, @RequestParam String name, @RequestParam String url) {
-        logger.info("Получен запрос на добавление сайта '{}' для пользователя с ID: {}", name, userId);
-        return websiteService.addUserWebsite(userId, name, url);
+    public ResponseEntity<Response<Website>> addUserWebsite(
+        @PathVariable UUID userId,
+        @NotBlank @Size(min = 3, max = 100) @RequestParam String name,
+        @NotBlank @Size(min = 5, max = 200) @RequestParam String url) {
+        log.info("Получен запрос на добавление сайта '{}' для пользователя с ID: {}", name, userId);
+        Website website = websiteService.addUserWebsite(userId, name, url);
+        return ResponseEntity.ok(new Response<>(website));
     }
 
     @DeleteMapping("/user/{userId}")
-    public void deleteByName(@PathVariable UUID userId, @RequestParam String name) {
-        logger.info("Получен запрос на удаление сайта '{}' у пользователя с ID: {}", name, userId);
+    public ResponseEntity<Response<Void>> deleteByName(
+        @PathVariable UUID userId,
+        @NotBlank @RequestParam String name) {
+        log.info("Получен запрос на удаление сайта '{}' у пользователя с ID: {}", name, userId);
         websiteService.deleteByName(userId, name);
+        return ResponseEntity.ok(new Response<>(200, "Сайт успешно удалён"));
     }
 
     @GetMapping("/exists")
-    public boolean existsByName(@RequestParam String name) {
-        logger.info("Получен запрос на проверку существования сайта с именем: {}", name);
-        return websiteService.existsByName(name);
+    public ResponseEntity<Response<Boolean>> existsByName(@RequestParam @NotBlank String name) {
+        log.info("Получен запрос на проверку существования сайта с именем: {}", name);
+        boolean exists = websiteService.existsByName(name);
+        return ResponseEntity.ok(new Response<>(exists));
     }
 
     @GetMapping("/user/{userId}/by-name")
-    public Optional<Website> getByName(@PathVariable UUID userId, @RequestParam String name) {
-        logger.info("Получен запрос на получение сайта '{}' для пользователя с ID: {}", name, userId);
-        return websiteService.getByName(userId, name);
+    public ResponseEntity<Response<Website>> getByName(
+        @PathVariable UUID userId,
+        @NotBlank @RequestParam String name) {
+        log.info("Получен запрос на получение сайта '{}' для пользователя с ID: {}", name, userId);
+        Optional<Website> website = websiteService.getByName(userId, name);
+        return website
+            .map(w -> ResponseEntity.ok(new Response<>(w)))
+            .orElseGet(() -> ResponseEntity.status(404).body(new Response<>(404, "Сайт не найден")));
     }
 }

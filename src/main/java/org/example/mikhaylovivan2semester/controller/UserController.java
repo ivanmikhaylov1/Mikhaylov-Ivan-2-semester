@@ -1,48 +1,69 @@
 package org.example.mikhaylovivan2semester.controller;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.extern.slf4j.Slf4j;
+import org.example.mikhaylovivan2semester.entity.Response;
 import org.example.mikhaylovivan2semester.entity.User;
-import org.example.mikhaylovivan2semester.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.example.mikhaylovivan2semester.service.interfaces.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
+@Validated
 public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final UserService userService = new UserService();
+  private final UserService userService;
 
-    @GetMapping
-    public List<User> findAll() {
-        logger.info("Получен запрос на получение всех пользователей");
-        return userService.findAll();
-    }
+  @Autowired
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @PostMapping
-    public User save(@RequestParam String name, @RequestParam String password) {
-        logger.info("Получен запрос на сохранение пользователя: {}", name);
-        return userService.save(name, password).orElse(null);
-    }
+  @GetMapping
+  public ResponseEntity<Response<List<User>>> findAll() {
+    log.info("Получен запрос на получение всех пользователей");
+    List<User> users = userService.findAll();
+    return ResponseEntity.ok(new Response<>(users));
+  }
 
-    @GetMapping("/{userId}")
-    public Optional<User> getById(@PathVariable UUID userId) {
-        logger.info("Получен запрос на получение пользователя по ID: {}", userId);
-        return userService.getById(userId).orElse(null);
-    }
+  @PostMapping
+  public ResponseEntity<Response<User>> save(
+      @NotBlank @Size(min = 3, max = 50) @RequestParam String name,
+      @NotBlank @Size(min = 6) @RequestParam String password) {
+    log.info("Получен запрос на сохранение пользователя: {}", name);
+    Optional<User> user = userService.save(name, password);
+    return user.map(value -> ResponseEntity.ok(new Response<>(value)))
+        .orElseGet(() -> ResponseEntity.badRequest().body(new Response<>(400, "Не удалось создать пользователя")));
+  }
 
-    @GetMapping("/by-name")
-    public Optional<User> findByName(@RequestParam String name) {
-        logger.info("Получен запрос на получение пользователя по имени: {}", name);
-        return userService.findByName(name).orElse(null);
-    }
+  @GetMapping("/{userId}")
+  public ResponseEntity<Response<User>> getById(@PathVariable UUID userId) {
+    log.info("Получен запрос на получение пользователя по ID: {}", userId);
+    Optional<User> user = userService.getById(userId);
+    return user.map(value -> ResponseEntity.ok(new Response<>(value)))
+        .orElseGet(() -> ResponseEntity.status(404).body(new Response<>(404, "Пользователь не найден")));
+  }
 
-    @GetMapping("/exists")
-    public boolean exists(@RequestParam String name) {
-        logger.info("Получен запрос на проверку существования пользователя с именем: {}", name);
-        return userService.exists(name);
-    }
+  @GetMapping("/by-name")
+  public ResponseEntity<Response<User>> findByName(@RequestParam @NotBlank String name) {
+    log.info("Получен запрос на получение пользователя по имени: {}", name);
+    Optional<User> user = userService.findByName(name);
+    return user.map(value -> ResponseEntity.ok(new Response<>(value)))
+        .orElseGet(() -> ResponseEntity.status(404).body(new Response<>(404, "Пользователь не найден")));
+  }
+
+  @GetMapping("/exists")
+  public ResponseEntity<Response<Boolean>> exists(@RequestParam @NotBlank String name) {
+    log.info("Получен запрос на проверку существования пользователя с именем: {}", name);
+    boolean exists = userService.exists(name);
+    return ResponseEntity.ok(new Response<>(exists));
+  }
 }
