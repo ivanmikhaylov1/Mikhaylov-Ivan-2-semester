@@ -43,7 +43,8 @@ public class WebsiteServiceImpl implements WebsiteService {
   }
 
   @Override
-  public void deleteByName(UUID userId, String name) {
+  public boolean deleteByName(UUID userId, String name) {
     websiteRepository.deleteByName(userId, name);
+    return false;
   }
 }

@@ -40,7 +40,7 @@ public class UserController {
       @NotBlank @Size(min = 6) @RequestParam String password) {
     log.info("Получен запрос на сохранение пользователя: {}", name);
     Optional<User> user = userService.save(name, password);
-    return user.map(value -> ResponseEntity.ok(new Response<>(value)))
+    return user.map(value -> ResponseEntity.status(201).body(new Response<>(value)))
         .orElseGet(() -> ResponseEntity.badRequest().body(new Response<>(400, "Не удалось создать пользователя")));
   }
 

@@ -12,5 +12,5 @@ public interface WebsiteService {
   boolean existsByName(String name);
   Optional<Website> getByName(UUID userId, String name);
   Website addUserWebsite(UUID userId, String name, String url);
-  void deleteByName(UUID userId, String name);
+  boolean deleteByName(UUID userId, String name);
 }

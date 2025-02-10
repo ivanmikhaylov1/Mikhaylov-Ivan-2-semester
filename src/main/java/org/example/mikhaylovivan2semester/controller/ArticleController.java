@@ -38,7 +38,7 @@ public class ArticleController {
   public ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody Article article) {
     log.info("Получен запрос на сохранение статьи: {}", article.name());
     articleService.saveArticle(article);
-    return ResponseEntity.ok(new Response<>(200, "Статья успешно сохранена"));
+    return ResponseEntity.status(201).body(new Response<>(201, "Статья успешно сохранена"));
   }
 
   @PutMapping("/user/{userId}/lastRequestTime")
@@ -69,6 +69,6 @@ public class ArticleController {
     log.info("Получен запрос на сохранение категории статьи: articleId={}, catalogId={}, websiteId={}",
         articleId, catalogId, websiteId);
     articleService.saveArticleCategory(articleId, catalogId, websiteId);
-    return ResponseEntity.ok(new Response<>(200, "Категория статьи сохранена"));
+    return ResponseEntity.status(201).body(new Response<>(201, "Категория статьи сохранена"));
   }
 }

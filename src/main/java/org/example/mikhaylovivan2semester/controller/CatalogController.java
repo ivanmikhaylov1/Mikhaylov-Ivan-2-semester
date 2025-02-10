@@ -61,13 +61,13 @@ public class CatalogController {
   public ResponseEntity<Response<Catalog>> addToUser(@RequestParam UUID userId, @RequestParam String name) {
     log.info("Получен запрос на добавление категории к пользователю с ID: {} и именем категории: {}", userId, name);
     Catalog catalog = catalogService.addToUser(userId, name);
-    return ResponseEntity.ok(new Response<>(catalog));
+    return ResponseEntity.status(201).body(new Response<>(catalog));
   }
 
   @PutMapping("/addUserCatalog")
   public ResponseEntity<Response<Catalog>> addUserCatalog(@RequestParam UUID userId, @RequestParam String name) {
     log.info("Получен запрос на добавление пользовательской категории для пользователя с ID: {} и именем категории: {}", userId, name);
     Catalog catalog = catalogService.addUserCatalog(userId, name);
-    return ResponseEntity.ok(new Response<>(catalog));
+    return ResponseEntity.status(201).body(new Response<>(catalog));
   }
 }

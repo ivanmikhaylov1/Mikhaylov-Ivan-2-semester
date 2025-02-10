@@ -48,7 +48,7 @@ public class WebsiteController {
         @NotBlank @Size(min = 5, max = 200) @RequestParam String url) {
         log.info("Получен запрос на добавление сайта '{}' для пользователя с ID: {}", name, userId);
         Website website = websiteService.addUserWebsite(userId, name, url);
-        return ResponseEntity.ok(new Response<>(website));
+        return ResponseEntity.status(201).body(new Response<>(website));
     }
 
     @DeleteMapping("/user/{userId}")
@@ -56,8 +56,12 @@ public class WebsiteController {
         @PathVariable UUID userId,
         @NotBlank @RequestParam String name) {
         log.info("Получен запрос на удаление сайта '{}' у пользователя с ID: {}", name, userId);
-        websiteService.deleteByName(userId, name);
-        return ResponseEntity.ok(new Response<>(200, "Сайт успешно удалён"));
+        boolean deleted = websiteService.deleteByName(userId, name);
+        if (deleted) {
+            return ResponseEntity.ok(new Response<>(200, "Сайт успешно удалён"));
+        } else {
+            return ResponseEntity.status(404).body(new Response<>(404, "Сайт не найден"));
+        }
     }
 
     @GetMapping("/exists")
