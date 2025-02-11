@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: Mikhaylov-Ivan-2-semester
+
+server:
+  port: 8080
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+    operationsSorter: method
+    tagsSorter: alpha
+    docExpansion: none
