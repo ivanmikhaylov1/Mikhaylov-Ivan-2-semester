@@ -11,19 +11,19 @@ paths:
   /users:
     post:
       summary: Save User
-      parameters:
-        - name: name
-          in: query
-          required: true
-          schema:
-            type: string
-            default: "Test User"
-        - name: password
-          in: query
-          required: true
-          schema:
-            type: string
-            default: "testpassword"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  default: "Test User"
+                password:
+                  type: string
+                  default: "testpassword"
       responses:
         "201":
           description: User created
@@ -150,20 +150,12 @@ paths:
           description: User's websites
     post:
       summary: Add User Website
-      parameters:
-        - name: name
-          in: query
-          required: true
-          schema:
-            type: string
-            default: "Test Website"
-        - name: url
-          in: query
-          required: true
-          schema:
-            type: string
-            format: uri
-            default: "https://www.example.com"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddWebsiteRequest'
       responses:
         "201":
           description: Website added
@@ -311,3 +303,24 @@ components:
           type: string
           format: uuid
           default: "valid-website-id"
+
+    AddWebsiteRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          default: "Test Website"
+        url:
+          type: string
+          format: uri
+          default: "https://www.example.com"
+
+    AddCatalogRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          default: "Test Catalog"
+        description:
+          type: string
+          default: "This is a test catalog."

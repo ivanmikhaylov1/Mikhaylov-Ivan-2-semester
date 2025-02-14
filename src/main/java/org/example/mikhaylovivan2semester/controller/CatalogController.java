@@ -3,8 +3,8 @@ package org.example.mikhaylovivan2semester.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.api.CatalogApiDocumentation;
 import org.example.mikhaylovivan2semester.entity.Catalog;
-import org.example.mikhaylovivan2semester.entity.Request;
 import org.example.mikhaylovivan2semester.entity.Response;
+import org.example.mikhaylovivan2semester.entity.response.CreateCatalogRequest;
 import org.example.mikhaylovivan2semester.service.implementations.CatalogServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -67,19 +67,19 @@ public class CatalogController implements CatalogApiDocumentation {
 
   @Override
   @PutMapping("/addToUser")
-  public ResponseEntity<Response<Catalog>> addToUser(@RequestBody Request<String> catalogRequest) {
-    String name = catalogRequest.data();
-    log.info("Получен запрос на добавление категории к пользователю с ID: {} и именем категории: {}", catalogRequest.data(), name);
-    Catalog catalog = catalogService.addToUser(UUID.fromString(catalogRequest.data()), name);
+  public ResponseEntity<Response<Catalog>> addToUser(@RequestBody CreateCatalogRequest catalogRequest) {
+    String name = catalogRequest.getName();
+    log.info("Получен запрос на добавление категории к пользователю с ID: {} и именем категории: {}", catalogRequest.getUserId(), name);
+    Catalog catalog = catalogService.addToUser(catalogRequest.getUserId(), name);
     return ResponseEntity.status(201).body(new Response<>(catalog));
   }
 
   @Override
   @PutMapping("/addUserCatalog")
-  public ResponseEntity<Response<Catalog>> addUserCatalog(@RequestBody Request<String> catalogRequest) {
-    String name = catalogRequest.data();
-    log.info("Получен запрос на добавление пользовательской категории для пользователя с ID: {} и именем категории: {}", catalogRequest.data(), name);
-    Catalog catalog = catalogService.addUserCatalog(UUID.fromString(catalogRequest.data()), name);
+  public ResponseEntity<Response<Catalog>> addUserCatalog(@RequestBody CreateCatalogRequest catalogRequest) {
+    String name = catalogRequest.getName();
+    log.info("Получен запрос на добавление пользовательской категории для пользователя с ID: {} и именем категории: {}", catalogRequest.getUserId(), name);
+    Catalog catalog = catalogService.addUserCatalog(catalogRequest.getUserId(), name);
     return ResponseEntity.status(201).body(new Response<>(catalog));
   }
 }

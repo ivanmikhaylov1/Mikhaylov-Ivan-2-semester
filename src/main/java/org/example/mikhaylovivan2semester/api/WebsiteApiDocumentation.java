@@ -44,10 +44,10 @@ public interface WebsiteApiDocumentation {
   @PostMapping("/user/{userId}")
   ResponseEntity<Response<Website>> addUserWebsite(
       @Parameter(description = "User ID", required = true) @PathVariable UUID userId,
-      @RequestBody @Valid Website website
+      @RequestBody @Valid Website websiteв
   );
 
-  @Operation(summary = "Delete a website by name", description = "Delete a website for a specified user by name")
+  @Operation(summary = "Delete a website by getName", description = "Delete a website for a specified user by getName")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Website successfully deleted"),
       @ApiResponse(responseCode = "404", description = "Website not found")
@@ -55,20 +55,20 @@ public interface WebsiteApiDocumentation {
   @DeleteMapping("/user/{userId}")
   ResponseEntity<Response<Void>> deleteByName(
       @Parameter(description = "User ID", required = true) @PathVariable UUID userId,
-      @Parameter(description = "Website name", required = true) @NotBlank @RequestParam String name
+      @Parameter(description = "Website getName", required = true) @NotBlank @RequestParam String name
   );
 
-  @Operation(summary = "Check if a website exists by name", description = "Check whether a website with the specified name exists")
+  @Operation(summary = "Check if a website exists by getName", description = "Check whether a website with the specified getName exists")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Website existence status"),
       @ApiResponse(responseCode = "400", description = "Bad request")
   })
   @GetMapping("/exists")
   ResponseEntity<Response<Boolean>> existsByName(
-      @Parameter(description = "Website name", required = true) @RequestParam @NotBlank String name
+      @Parameter(description = "Website getName", required = true) @RequestParam @NotBlank String name
   );
 
-  @Operation(summary = "Get a website by name", description = "Fetch a website by its name for a specific user")
+  @Operation(summary = "Get a website by getName", description = "Fetch a website by its getName for a specific user")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Website details"),
       @ApiResponse(responseCode = "404", description = "Website not found")
@@ -76,6 +76,6 @@ public interface WebsiteApiDocumentation {
   @GetMapping("/user/{userId}/by-name")
   ResponseEntity<Response<Website>> getByName(
       @Parameter(description = "User ID", required = true) @PathVariable UUID userId,
-      @Parameter(description = "Website name", required = true) @NotBlank @RequestParam String name
+      @Parameter(description = "Website getName", required = true) @NotBlank @RequestParam String name
   );
 }

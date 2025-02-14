@@ -5,10 +5,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
-import org.example.mikhaylovivan2semester.controller.UserController;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
-import org.example.mikhaylovivan2semester.entity.Request;
 import org.example.mikhaylovivan2semester.entity.Response;
+import org.example.mikhaylovivan2semester.entity.response.CreateUserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +32,7 @@ public interface UserApiDocumentation {
       @ApiResponse(responseCode = "400", description = "Bad request")
   })
   ResponseEntity<Response<UserDTO>> save(
-      @RequestBody Request<UserController.CreateUserRequest> userRequest);
+      @RequestBody CreateUserRequest createUserRequest);
 
   @Operation(summary = "Get user by ID", description = "Fetch user details by their ID")
   @ApiResponses(value = {
@@ -42,14 +41,14 @@ public interface UserApiDocumentation {
   })
   ResponseEntity<Response<UserDTO>> getById(@PathVariable UUID userId);
 
-  @Operation(summary = "Get user by name", description = "Fetch user details by their name")
+  @Operation(summary = "Get user by getName", description = "Fetch user details by their getName")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "User details"),
       @ApiResponse(responseCode = "404", description = "User not found")
   })
   ResponseEntity<Response<UserDTO>> findByName(@RequestParam @NotBlank String name);
 
-  @Operation(summary = "Check if user exists", description = "Check if a user exists by their name")
+  @Operation(summary = "Check if user exists", description = "Check if a user exists by their getName")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "User exists"),
       @ApiResponse(responseCode = "404", description = "User not found")

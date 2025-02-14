@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.mikhaylovivan2semester.entity.Catalog;
-import org.example.mikhaylovivan2semester.entity.Request;
 import org.example.mikhaylovivan2semester.entity.Response;
+import org.example.mikhaylovivan2semester.entity.response.CreateCatalogRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,28 +36,28 @@ public interface CatalogApiDocumentation {
       @Parameter(description = "User ID", required = true) @PathVariable UUID userId
   );
 
-  @Operation(summary = "Check if catalog exists by name", description = "Check whether a catalog with the specified name exists")
+  @Operation(summary = "Check if catalog exists by getName", description = "Check whether a catalog with the specified getName exists")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Catalog existence status"),
       @ApiResponse(responseCode = "400", description = "Bad request")
   })
   @GetMapping("/exists")
   ResponseEntity<Response<Boolean>> existsByName(
-      @Parameter(description = "Catalog name", required = true) @RequestParam String name
+      @Parameter(description = "Catalog getName", required = true) @RequestParam String name
   );
 
-  @Operation(summary = "Get catalog by name", description = "Fetch a catalog by its name")
+  @Operation(summary = "Get catalog by getName", description = "Fetch a catalog by its getName")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Catalog with specified name"),
+      @ApiResponse(responseCode = "200", description = "Catalog with specified getName"),
       @ApiResponse(responseCode = "404", description = "Catalog not found")
   })
   @GetMapping("/name")
   ResponseEntity<Response<Optional<Catalog>>> getByName(
       @Parameter(description = "User ID", required = true) @RequestParam UUID userId,
-      @Parameter(description = "Catalog name", required = true) @RequestParam String name
+      @Parameter(description = "Catalog getName", required = true) @RequestParam String name
   );
 
-  @Operation(summary = "Delete catalog by name", description = "Delete a catalog by its name")
+  @Operation(summary = "Delete catalog by getName", description = "Delete a catalog by its getName")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Catalog deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Catalog not found")
@@ -65,7 +65,7 @@ public interface CatalogApiDocumentation {
   @DeleteMapping("/delete")
   ResponseEntity<Response<Void>> deleteByName(
       @Parameter(description = "User ID", required = true) @RequestParam UUID userId,
-      @Parameter(description = "Catalog name", required = true) @RequestParam String name
+      @Parameter(description = "Catalog getName", required = true) @RequestParam String name
   );
 
   @Operation(summary = "Add catalog to user", description = "Associate a catalog with a user by their ID")
@@ -75,7 +75,7 @@ public interface CatalogApiDocumentation {
   })
   @PutMapping("/addToUser")
   ResponseEntity<Response<Catalog>> addToUser(
-      @RequestBody Request<String> catalogRequest
+      @RequestBody CreateCatalogRequest catalogRequest
   );
 
   @Operation(summary = "Add a new catalog for a user", description = "Create and add a new catalog to a user")
@@ -85,6 +85,6 @@ public interface CatalogApiDocumentation {
   })
   @PutMapping("/addUserCatalog")
   ResponseEntity<Response<Catalog>> addUserCatalog(
-      @RequestBody Request<String> catalogRequest
+      @RequestBody CreateCatalogRequest catalogRequest
       );
 }

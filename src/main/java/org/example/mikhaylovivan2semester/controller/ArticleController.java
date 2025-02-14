@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.api.ArticleApiDocumentation;
 import org.example.mikhaylovivan2semester.entity.Article;
-import org.example.mikhaylovivan2semester.entity.Request;
 import org.example.mikhaylovivan2semester.entity.Response;
+import org.example.mikhaylovivan2semester.entity.response.CreateArticleRequest;
 import org.example.mikhaylovivan2semester.service.interfaces.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +39,14 @@ public class ArticleController implements ArticleApiDocumentation {
 
   @Override
   @PostMapping
-  public ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody Request<Article> articleRequest) {
-    Article article = articleRequest.data();
-    log.info("Получен запрос на сохранение статьи: {}", article.name());
+  public ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody CreateArticleRequest createArticleRequest) {
+    if (createArticleRequest == null) {
+      log.error("Не получен объект CreateArticleRequest в запросе");
+      return ResponseEntity.badRequest().body(new Response<>(400, "Некорректные данные запроса"));
+    }
+
+    log.info("Получен запрос на сохранение статьи: {}", createArticleRequest.getName());
+    Article article = new Article(UUID.randomUUID(), createArticleRequest.getName(), createArticleRequest.getDescription(), createArticleRequest.getDate(), createArticleRequest.getLink());
     articleService.saveArticle(article);
     return ResponseEntity.status(201).body(new Response<>(201, "Статья успешно сохранена"));
   }
