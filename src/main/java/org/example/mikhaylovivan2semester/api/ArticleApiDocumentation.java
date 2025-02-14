@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.mikhaylovivan2semester.entity.Article;
+import org.example.mikhaylovivan2semester.entity.Request;
 import org.example.mikhaylovivan2semester.entity.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,7 @@ public interface ArticleApiDocumentation {
       @ApiResponse(responseCode = "201", description = "Article created successfully"),
       @ApiResponse(responseCode = "400", description = "Bad request")
   })
-  ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody Article article);
+  ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody Request<Article> article);
 
   @Operation(summary = "Update the last request time", description = "Update the last request time for the user")
   @ApiResponses(value = {

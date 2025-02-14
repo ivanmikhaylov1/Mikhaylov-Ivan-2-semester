@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.api.ArticleApiDocumentation;
 import org.example.mikhaylovivan2semester.entity.Article;
+import org.example.mikhaylovivan2semester.entity.Request;
 import org.example.mikhaylovivan2semester.entity.Response;
 import org.example.mikhaylovivan2semester.service.interfaces.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,8 @@ public class ArticleController implements ArticleApiDocumentation {
 
   @Override
   @PostMapping
-  public ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody Article article) {
+  public ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody Request<Article> articleRequest) {
+    Article article = articleRequest.data();
     log.info("Получен запрос на сохранение статьи: {}", article.name());
     articleService.saveArticle(article);
     return ResponseEntity.status(201).body(new Response<>(201, "Статья успешно сохранена"));

@@ -1,7 +1,6 @@
 package org.example.mikhaylovivan2semester.controller;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.api.WebsiteApiDocumentation;
 import org.example.mikhaylovivan2semester.entity.Response;
@@ -48,10 +47,9 @@ public class WebsiteController implements WebsiteApiDocumentation {
   @PostMapping("/user/{userId}")
   public ResponseEntity<Response<Website>> addUserWebsite(
       @PathVariable UUID userId,
-      @NotBlank @Size(min = 3, max = 100) @RequestParam String name,
-      @NotBlank @Size(min = 5, max = 200) @RequestParam String url) {
-    log.info("Получен запрос на добавление сайта '{}' для пользователя с ID: {}", name, userId);
-    Website website = websiteService.addUserWebsite(userId, name, url);
+      @RequestBody Website websiteRequest) {  // Используем обычный объект Website
+    log.info("Получен запрос на добавление сайта '{}' для пользователя с ID: {}", websiteRequest.name(), userId);
+    Website website = websiteService.addUserWebsite(userId, websiteRequest.name(), websiteRequest.url());
     return ResponseEntity.status(201).body(new Response<>(website));
   }
 

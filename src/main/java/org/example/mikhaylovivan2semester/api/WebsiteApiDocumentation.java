@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import org.example.mikhaylovivan2semester.entity.Response;
 import org.example.mikhaylovivan2semester.entity.Website;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +44,7 @@ public interface WebsiteApiDocumentation {
   @PostMapping("/user/{userId}")
   ResponseEntity<Response<Website>> addUserWebsite(
       @Parameter(description = "User ID", required = true) @PathVariable UUID userId,
-      @Parameter(description = "Website name", required = true) @NotBlank @Size(min = 3, max = 100) @RequestParam String name,
-      @Parameter(description = "Website URL", required = true) @NotBlank @Size(min = 5, max = 200) @RequestParam String url
+      @RequestBody @Valid Website website
   );
 
   @Operation(summary = "Delete a website by name", description = "Delete a website for a specified user by name")

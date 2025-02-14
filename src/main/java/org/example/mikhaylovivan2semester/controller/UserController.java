@@ -4,8 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.api.UserApiDocumentation;
+import org.example.mikhaylovivan2semester.dto.UserDTO;
+import org.example.mikhaylovivan2semester.entity.Request;
 import org.example.mikhaylovivan2semester.entity.Response;
-import org.example.mikhaylovivan2semester.entity.User;
 import org.example.mikhaylovivan2semester.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,37 +31,36 @@ public class UserController implements UserApiDocumentation {
 
   @Override
   @GetMapping
-  public ResponseEntity<Response<List<User>>> findAll() {
+  public ResponseEntity<Response<List<UserDTO>>> findAll() {
     log.info("Получен запрос на получение всех пользователей");
-    List<User> users = userService.findAll();
+    List<UserDTO> users = userService.findAll();
     return ResponseEntity.ok(new Response<>(users));
   }
 
   @Override
   @PostMapping
-  public ResponseEntity<Response<User>> save(
-      @NotBlank @Size(min = 3, max = 50) @RequestParam String name,
-      @NotBlank @Size(min = 6) @RequestParam String password) {
-    log.info("Получен запрос на сохранение пользователя: {}", name);
-    Optional<User> user = userService.save(name, password);
+  public ResponseEntity<Response<UserDTO>> save(@RequestBody Request<CreateUserRequest> userRequest) {
+    CreateUserRequest createUserRequest = userRequest.data();
+    log.info("Получен запрос на сохранение пользователя: {}", createUserRequest.name());
+    Optional<UserDTO> user = userService.save(createUserRequest.name(), createUserRequest.password());
     return user.map(value -> ResponseEntity.status(201).body(new Response<>(value)))
         .orElseGet(() -> ResponseEntity.badRequest().body(new Response<>(400, "Не удалось создать пользователя")));
   }
 
   @Override
   @GetMapping("/{userId}")
-  public ResponseEntity<Response<User>> getById(@PathVariable UUID userId) {
+  public ResponseEntity<Response<UserDTO>> getById(@PathVariable UUID userId) {
     log.info("Получен запрос на получение пользователя по ID: {}", userId);
-    Optional<User> user = userService.getById(userId);
+    Optional<UserDTO> user = userService.getById(userId);
     return user.map(value -> ResponseEntity.ok(new Response<>(value)))
         .orElseGet(() -> ResponseEntity.status(404).body(new Response<>(404, "Пользователь не найден")));
   }
 
   @Override
   @GetMapping("/by-name")
-  public ResponseEntity<Response<User>> findByName(@RequestParam @NotBlank String name) {
+  public ResponseEntity<Response<UserDTO>> findByName(@RequestParam @NotBlank String name) {
     log.info("Получен запрос на получение пользователя по имени: {}", name);
-    Optional<User> user = userService.findByName(name);
+    Optional<UserDTO> user = userService.findByName(name);
     return user.map(value -> ResponseEntity.ok(new Response<>(value)))
         .orElseGet(() -> ResponseEntity.status(404).body(new Response<>(404, "Пользователь не найден")));
   }
@@ -71,5 +71,29 @@ public class UserController implements UserApiDocumentation {
     log.info("Получен запрос на проверку существования пользователя с именем: {}", name);
     boolean exists = userService.exists(name);
     return ResponseEntity.ok(new Response<>(exists));
+  }
+
+  // Вспомогательный класс для сохранения данных пользователя
+  public static class CreateUserRequest {
+    @NotBlank
+    @Size(min = 3, max = 50)
+    private String name;
+
+    @NotBlank
+    @Size(min = 6)
+    private String password;
+
+    public CreateUserRequest(String name, String password) {
+      this.name = name;
+      this.password = password;
+    }
+
+    public String name() {
+      return name;
+    }
+
+    public String password() {
+      return password;
+    }
   }
 }

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.mikhaylovivan2semester.entity.Catalog;
+import org.example.mikhaylovivan2semester.entity.Request;
 import org.example.mikhaylovivan2semester.entity.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,8 +75,7 @@ public interface CatalogApiDocumentation {
   })
   @PutMapping("/addToUser")
   ResponseEntity<Response<Catalog>> addToUser(
-      @Parameter(description = "User ID", required = true) @RequestParam UUID userId,
-      @Parameter(description = "Catalog name", required = true) @RequestParam String name
+      @RequestBody Request<String> catalogRequest
   );
 
   @Operation(summary = "Add a new catalog for a user", description = "Create and add a new catalog to a user")
@@ -85,7 +85,6 @@ public interface CatalogApiDocumentation {
   })
   @PutMapping("/addUserCatalog")
   ResponseEntity<Response<Catalog>> addUserCatalog(
-      @Parameter(description = "User ID", required = true) @RequestParam UUID userId,
-      @Parameter(description = "Catalog name", required = true) @RequestParam String name
-  );
+      @RequestBody Request<String> catalogRequest
+      );
 }

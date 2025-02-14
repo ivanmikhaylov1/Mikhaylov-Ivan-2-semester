@@ -1,8 +1,10 @@
 package org.example.mikhaylovivan2semester.service.implementations;
 
-import org.example.mikhaylovivan2semester.entity.User;
+import org.example.mikhaylovivan2semester.dto.UserDTO;
 import org.example.mikhaylovivan2semester.repository.UserRepository;
 import org.example.mikhaylovivan2semester.service.interfaces.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,28 +14,32 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
+  private final BCryptPasswordEncoder passwordEncoder;
 
+  @Autowired
   private UserServiceImpl(UserRepository userRepository) {
     this.userRepository = userRepository;
+    this.passwordEncoder = new BCryptPasswordEncoder();
   }
 
   @Override
-  public List<User> findAll() {
+  public List<UserDTO> findAll() {
     return userRepository.findAll();
   }
 
   @Override
-  public Optional<User> save(String name, String password) {
-    return Optional.ofNullable(userRepository.save(name, password));
+  public Optional<UserDTO> save(String name, String password) {
+    String encryptedPassword = passwordEncoder.encode(password);
+    return Optional.ofNullable(userRepository.save(name, encryptedPassword));
   }
 
   @Override
-  public Optional<User> getById(UUID userId) {
+  public Optional<UserDTO> getById(UUID userId) {
     return userRepository.getById(userId);
   }
 
   @Override
-  public Optional<User> findByName(String name) {
+  public Optional<UserDTO> findByName(String name) {
     return userRepository.findByName(name);
   }
 

@@ -3,6 +3,7 @@ package org.example.mikhaylovivan2semester.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.api.CatalogApiDocumentation;
 import org.example.mikhaylovivan2semester.entity.Catalog;
+import org.example.mikhaylovivan2semester.entity.Request;
 import org.example.mikhaylovivan2semester.entity.Response;
 import org.example.mikhaylovivan2semester.service.implementations.CatalogServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class CatalogController implements CatalogApiDocumentation {
   @Override
   @GetMapping("/exists")
   public ResponseEntity<Response<Boolean>> existsByName(@RequestParam String name) {
-    log.info("Получен запрос на проверку существования категории по названию c именем: {}", name);
+    log.info("Получен запрос на проверку существования категории по названию с именем: {}", name);
     boolean exists = catalogService.existsByName(name);
     return ResponseEntity.ok(new Response<>(exists));
   }
@@ -66,17 +67,19 @@ public class CatalogController implements CatalogApiDocumentation {
 
   @Override
   @PutMapping("/addToUser")
-  public ResponseEntity<Response<Catalog>> addToUser(@RequestParam UUID userId, @RequestParam String name) {
-    log.info("Получен запрос на добавление категории к пользователю с ID: {} и именем категории: {}", userId, name);
-    Catalog catalog = catalogService.addToUser(userId, name);
+  public ResponseEntity<Response<Catalog>> addToUser(@RequestBody Request<String> catalogRequest) {
+    String name = catalogRequest.data();
+    log.info("Получен запрос на добавление категории к пользователю с ID: {} и именем категории: {}", catalogRequest.data(), name);
+    Catalog catalog = catalogService.addToUser(UUID.fromString(catalogRequest.data()), name);
     return ResponseEntity.status(201).body(new Response<>(catalog));
   }
 
   @Override
   @PutMapping("/addUserCatalog")
-  public ResponseEntity<Response<Catalog>> addUserCatalog(@RequestParam UUID userId, @RequestParam String name) {
-    log.info("Получен запрос на добавление пользовательской категории для пользователя с ID: {} и именем категории: {}", userId, name);
-    Catalog catalog = catalogService.addUserCatalog(userId, name);
+  public ResponseEntity<Response<Catalog>> addUserCatalog(@RequestBody Request<String> catalogRequest) {
+    String name = catalogRequest.data();
+    log.info("Получен запрос на добавление пользовательской категории для пользователя с ID: {} и именем категории: {}", catalogRequest.data(), name);
+    Catalog catalog = catalogService.addUserCatalog(UUID.fromString(catalogRequest.data()), name);
     return ResponseEntity.status(201).body(new Response<>(catalog));
   }
 }
