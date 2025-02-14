@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.entity.Catalog;
 import org.example.mikhaylovivan2semester.repository.CatalogRepository;
 import org.example.mikhaylovivan2semester.service.interfaces.CatalogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class CatalogServiceImpl implements CatalogService {
   private final CatalogRepository catalogRepository;
 
+  @Autowired
   private CatalogServiceImpl(CatalogRepository catalogRepository) {
     this.catalogRepository = catalogRepository;
   }
@@ -45,7 +47,7 @@ public class CatalogServiceImpl implements CatalogService {
 
   @Override
   public boolean existsByName(String name) {
-    log.info("Вызван метод existsByName для пользователя с ID: {} и категории: {}", name);
+    log.info("Вызван метод existsByName для пользователя с name: {}", name);
     return catalogRepository.existsByName(name);
   }
 

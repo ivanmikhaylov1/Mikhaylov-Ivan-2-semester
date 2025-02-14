@@ -264,6 +264,31 @@ paths:
         "200":
           description: Catalog deleted
 
+  /catalogs/addToUser:
+    put:
+      summary: Add Catalog To User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                  default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+                name:
+                  type: string
+                  default: "Test Catalog"
+      responses:
+        "201":
+          description: Catalog added to user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Catalog'
+
 components:
   schemas:
     Article:
@@ -315,12 +340,12 @@ components:
           format: uri
           default: "https://www.example.com"
 
-    AddCatalogRequest:
+    Catalog:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         name:
           type: string
           default: "Test Catalog"
-        description:
-          type: string
-          default: "This is a test catalog."

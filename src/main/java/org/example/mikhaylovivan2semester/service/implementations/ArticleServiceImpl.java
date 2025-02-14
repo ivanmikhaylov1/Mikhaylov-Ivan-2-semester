@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.entity.Article;
 import org.example.mikhaylovivan2semester.repository.ArticleRepository;
 import org.example.mikhaylovivan2semester.service.interfaces.ArticleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class ArticleServiceImpl implements ArticleService {
   private final ArticleRepository articleRepository;
 
+  @Autowired
   private ArticleServiceImpl(ArticleRepository articleRepository) {
     this.articleRepository = articleRepository;
   }

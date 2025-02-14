@@ -3,19 +3,24 @@ package org.example.mikhaylovivan2semester.entity.response;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import org.hibernate.validator.constraints.URL;
 
 import java.util.UUID;
 
 @Getter
-public class CreateCatalogRequest {
+public class CreateWebsiteRequest {
   @NotBlank
-  @Size(min = 3, max = 20)
   private String name;
+
+  @URL
+  @Size(min = 5, max = 30)
+  private String url;
 
   private final UUID userId;
 
-  public CreateCatalogRequest(String name, UUID userId) {
+  public CreateWebsiteRequest(String name, String url, UUID userId) {
     this.name = name;
+    this.url = url;
     this.userId = userId;
   }
 }

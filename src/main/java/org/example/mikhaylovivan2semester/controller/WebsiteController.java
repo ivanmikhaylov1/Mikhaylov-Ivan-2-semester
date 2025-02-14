@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.api.WebsiteApiDocumentation;
 import org.example.mikhaylovivan2semester.entity.Response;
 import org.example.mikhaylovivan2semester.entity.Website;
+import org.example.mikhaylovivan2semester.entity.response.CreateWebsiteRequest;
 import org.example.mikhaylovivan2semester.service.interfaces.WebsiteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,13 +46,17 @@ public class WebsiteController implements WebsiteApiDocumentation {
 
   @Override
   @PostMapping("/user/{userId}")
-  public ResponseEntity<Response<Website>> addUserWebsite(
-      @PathVariable UUID userId,
-      @RequestBody Website websiteRequest) {  // Используем обычный объект Website
-    log.info("Получен запрос на добавление сайта '{}' для пользователя с ID: {}", websiteRequest.name(), userId);
-    Website website = websiteService.addUserWebsite(userId, websiteRequest.name(), websiteRequest.url());
+  public ResponseEntity<Response<Website>> addUserWebsite(@RequestBody CreateWebsiteRequest createWebsiteRequest) {
+    log.info("Получен запрос на добавление сайта '{}' для пользователя с ID: {}", createWebsiteRequest.getName(), createWebsiteRequest.getUserId());
+
+    Website website = websiteService.addUserWebsite(
+        createWebsiteRequest.getUserId(),
+        createWebsiteRequest.getName(),
+        createWebsiteRequest.getUrl());
+
     return ResponseEntity.status(201).body(new Response<>(website));
   }
+
 
   @Override
   @DeleteMapping("/user/{userId}")
