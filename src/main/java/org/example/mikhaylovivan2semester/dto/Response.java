@@ -1,4 +1,4 @@
-package org.example.mikhaylovivan2semester.entity;
+package org.example.mikhaylovivan2semester.dto;
 
 public record Response<T>(int statusCode, T data, String message) {
   public Response(int statusCode, String message) {

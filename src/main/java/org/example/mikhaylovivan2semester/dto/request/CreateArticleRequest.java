@@ -1,4 +1,4 @@
-package org.example.mikhaylovivan2semester.entity.response;
+package org.example.mikhaylovivan2semester.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

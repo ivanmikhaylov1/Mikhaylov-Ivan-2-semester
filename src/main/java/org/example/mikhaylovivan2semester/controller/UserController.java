@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.api.UserApiDocumentation;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
-import org.example.mikhaylovivan2semester.entity.Response;
-import org.example.mikhaylovivan2semester.entity.response.CreateUserRequest;
+import org.example.mikhaylovivan2semester.dto.Response;
+import org.example.mikhaylovivan2semester.dto.request.CreateUserRequest;
 import org.example.mikhaylovivan2semester.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +49,6 @@ public class UserController implements UserApiDocumentation {
     return user.map(value -> ResponseEntity.status(201).body(new Response<>(value)))
         .orElseGet(() -> ResponseEntity.badRequest().body(new Response<>(400, "Не удалось создать пользователя")));
   }
-
 
   @Override
   @GetMapping("/{userId}")

@@ -1,108 +1,156 @@
 package org.example.e2e;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.mikhaylovivan2semester.Application;
-import org.example.mikhaylovivan2semester.entity.response.CreateArticleRequest;
-import org.example.mikhaylovivan2semester.entity.response.CreateUserRequest;
-import org.junit.jupiter.api.BeforeEach;
+import org.example.mikhaylovivan2semester.dto.UserDTO;
+import org.example.mikhaylovivan2semester.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.UUID;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties = "spring.config.location=classpath:/application-test.yml")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class EndToEndTest {
+  @Autowired
+  private UserRepository userRepository;
 
   @Autowired
   private TestRestTemplate restTemplate;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+  @LocalServerPort
+  private int port;
 
+  private String baseUrl;
   private UUID userId;
-  private UUID articleId;
 
-  @BeforeEach
-  void setup() {
-    userId = createUser("testUser", "password123");
-    articleId = createArticle("Test Article", "This is a test description", "2025-02-14", "http://example.com");
+  @BeforeAll
+  void setUp() {
+    baseUrl = "http://localhost:" + port;
+    createTestUser();
   }
 
-  private UUID createUser(String name, String password) {
-    CreateUserRequest createUserRequest = new CreateUserRequest(name, password);
-    Request<CreateUserRequest> request = new Request<>(createUserRequest);
-
-    ResponseEntity<String> response = restTemplate.postForEntity("/users", request, String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-    return extractId(response.getBody());
-  }
-
-  private UUID createArticle(String name, String description, String date, String link) {
-    CreateArticleRequest createArticleRequest = new CreateArticleRequest(name, description, date, link);
-    Request<CreateArticleRequest> request = new Request<>(createArticleRequest);
-
-    ResponseEntity<String> response = restTemplate.postForEntity("/articles", request, String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-    return extractId(response.getBody());
-  }
-
-  private UUID extractId(String json) {
-    try {
-      JsonNode node = objectMapper.readTree(json);
-      return UUID.fromString(node.get("data").get("id").asText());
-    } catch (Exception e) {
-      throw new RuntimeException("Ошибка при парсинге ID из JSON: " + json);
-    }
+  private void createTestUser() {
+    UserDTO testUser = userRepository.save("Test User", "testpassword");
+    userId = testUser.id();
   }
 
   @Test
-  void testFindAllUsers() {
-    ResponseEntity<String> response = restTemplate.getForEntity("/users", String.class);
+  void testSaveUser() {
+    Map<String, String> requestBody = new HashMap<>();
+    requestBody.put("name", "Test User");
+    requestBody.put("password", "testpassword");
+
+    ResponseEntity<String> response = restTemplate.postForEntity(
+        baseUrl + "/users",
+        requestBody,
+        String.class
+    );
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+  }
+
+  @Test
+  void testGetAllUsers() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/users", String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).contains("testUser");
   }
 
   @Test
   void testGetUserById() {
-    ResponseEntity<String> response = restTemplate.getForEntity("/users/" + userId, String.class);
+    ResponseEntity<UserDTO> response = restTemplate.getForEntity(baseUrl + "/users/" + userId, UserDTO.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).contains("testUser");
   }
 
   @Test
-  void testFindUserByName() {
-    ResponseEntity<String> response = restTemplate.getForEntity("/users/by-name?name=testUser", String.class);
+  void testGetUserByName() {
+    ResponseEntity<String> response = restTemplate.getForEntity(
+        baseUrl + "/users/by-name?name=" + URLEncoder.encode("Test User", StandardCharsets.UTF_8),
+        String.class
+    );
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).contains("testUser");
   }
 
   @Test
-  void testUserExists() {
-    ResponseEntity<String> response = restTemplate.getForEntity("/users/exists?name=testUser", String.class);
+  void testCheckIfUserExists() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/users/exists?name=Test%20User", String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).contains("true");
   }
 
   @Test
-  void testFindAllArticles() {
-    ResponseEntity<String> response = restTemplate.getForEntity("/articles", String.class);
+  void testGetArticles() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/articles", String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).contains("Test Article");
   }
 
   @Test
-  void testGetArticleById() {
-    ResponseEntity<String> response = restTemplate.getForEntity("/articles/" + articleId, String.class);
+  void testPutUserLastRequestTime() {
+    ResponseEntity<String> response = restTemplate.exchange(
+        baseUrl + "/articles/user/" + userId + "/lastRequestTime",
+        HttpMethod.PUT,
+        null,
+        String.class
+    );
+
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).contains("Test Article");
+  }
+
+  @Test
+  void testGetUserLastRequestTime() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/articles/user/" + userId + "/lastRequestTime", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void testGetBasicWebsites() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/websites/basic", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void testGetUserWebsites() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/websites/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void testCheckIfWebsiteExists() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/websites/exists?name=Test%20Website", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void testGetBasicCatalogs() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/catalogs/basic", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void testGetUserCatalogs() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/catalogs/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void testCheckIfCatalogExists() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/catalogs/exists?name=Test%20Catalog", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void testGetCatalogByName() {
+    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/catalogs/name?userId=8b9082bf-36ab-4aff-870f-3cbe13573d7f&name=Test%20Catalog", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 }

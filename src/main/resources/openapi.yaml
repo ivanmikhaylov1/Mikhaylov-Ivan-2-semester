@@ -110,6 +110,14 @@ paths:
           description: Last request time updated
     get:
       summary: Get User Last Request Time
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            default: 8b9082bf-36ab-4aff-870f-3cbe13573d7f
       responses:
         "200":
           description: Last request time

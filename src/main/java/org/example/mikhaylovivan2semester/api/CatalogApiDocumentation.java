@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.mikhaylovivan2semester.entity.Catalog;
-import org.example.mikhaylovivan2semester.entity.Response;
-import org.example.mikhaylovivan2semester.entity.response.CreateCatalogRequest;
+import org.example.mikhaylovivan2semester.dto.Response;
+import org.example.mikhaylovivan2semester.dto.request.CreateCatalogRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

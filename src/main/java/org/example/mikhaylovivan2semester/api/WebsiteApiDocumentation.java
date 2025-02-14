@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
-import org.example.mikhaylovivan2semester.entity.Response;
+import org.example.mikhaylovivan2semester.dto.Response;
 import org.example.mikhaylovivan2semester.entity.Website;
-import org.example.mikhaylovivan2semester.entity.response.CreateWebsiteRequest;
+import org.example.mikhaylovivan2semester.dto.request.CreateWebsiteRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
