@@ -17,13 +17,13 @@ paths:
           required: true
           schema:
             type: string
-          example: "Test User"
+            default: "Test User"
         - name: password
           in: query
           required: true
           schema:
             type: string
-          example: "testpassword"
+            default: "testpassword"
       responses:
         "201":
           description: User created
@@ -33,9 +33,17 @@ paths:
         "200":
           description: List of users
 
-  /users/8b9082bf-36ab-4aff-870f-3cbe13573d7f:
+  /users/{userId}:
     get:
       summary: Get User By Id
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
         "200":
           description: User details
@@ -49,7 +57,7 @@ paths:
           required: true
           schema:
             type: string
-          example: "Test User"
+            default: "Test User"
       responses:
         "200":
           description: User details
@@ -63,7 +71,7 @@ paths:
           required: true
           schema:
             type: string
-          example: "Test User"
+            default: "Test User"
       responses:
         "200":
           description: User exists
@@ -77,12 +85,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Article'
-            example:
-              id: "e5501240-65f1-11e9-bf1f-33b019c20472"
-              name: "Test Article"
-              description: "This is a test article."
-              date: "2025-02-10"
-              link: "http://example.com"
       responses:
         "201":
           description: Article created
@@ -92,9 +94,17 @@ paths:
         "200":
           description: List of articles
 
-  /articles/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f/lastRequestTime:
+  /articles/user/{userId}/lastRequestTime:
     put:
       summary: Update User Last Request Time
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
         "200":
           description: Last request time updated
@@ -113,10 +123,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ArticleCategory'
-            example:
-              articleId: "e5501240-65f1-11e9-bf1f-33b019c20472"
-              catalogId: "valid-catalog-id"
-              websiteId: "valid-website-id"
       responses:
         "201":
           description: Category saved
@@ -128,9 +134,17 @@ paths:
         "200":
           description: List of websites
 
-  /websites/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f:
+  /websites/user/{userId}:
     get:
       summary: Get User Websites
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
         "200":
           description: User's websites
@@ -142,13 +156,14 @@ paths:
           required: true
           schema:
             type: string
-          example: "Test Website"
+            default: "Test Website"
         - name: url
           in: query
           required: true
           schema:
             type: string
-          example: "https://www.example.com"
+            format: uri
+            default: "https://www.example.com"
       responses:
         "201":
           description: Website added
@@ -160,7 +175,7 @@ paths:
           required: true
           schema:
             type: string
-          example: "Test Website"
+            default: "Test Website"
       responses:
         "200":
           description: Website deleted
@@ -174,7 +189,7 @@ paths:
           required: true
           schema:
             type: string
-          example: "Test Website"
+            default: "Test Website"
       responses:
         "200":
           description: Website exists
@@ -186,9 +201,17 @@ paths:
         "200":
           description: List of catalogs
 
-  /catalogs/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f:
+  /catalogs/user/{userId}:
     get:
       summary: Get User Catalogs
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
         "200":
           description: User's catalogs
@@ -202,7 +225,7 @@ paths:
           required: true
           schema:
             type: string
-          example: "Test Catalog"
+            default: "Test Catalog"
       responses:
         "200":
           description: Catalog exists
@@ -216,13 +239,14 @@ paths:
           required: true
           schema:
             type: string
-          example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+            format: uuid
+            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
         - name: name
           in: query
           required: true
           schema:
             type: string
-          example: "Test Catalog"
+            default: "Test Catalog"
       responses:
         "200":
           description: Catalog details
@@ -236,13 +260,14 @@ paths:
           required: true
           schema:
             type: string
-          example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+            format: uuid
+            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
         - name: name
           in: query
           required: true
           schema:
             type: string
-          example: "Test Catalog"
+            default: "Test Catalog"
       responses:
         "200":
           description: Catalog deleted
@@ -255,16 +280,21 @@ components:
         id:
           type: string
           format: uuid
+          default: "e5501240-65f1-11e9-bf1f-33b019c20472"
         name:
           type: string
+          default: "Test Article"
         description:
           type: string
+          default: "This is a test article."
         date:
           type: string
           format: date
+          default: "2025-02-10"
         link:
           type: string
           format: uri
+          default: "http://example.com"
 
     ArticleCategory:
       type: object
@@ -272,9 +302,12 @@ components:
         articleId:
           type: string
           format: uuid
+          default: "e5501240-65f1-11e9-bf1f-33b019c20472"
         catalogId:
           type: string
           format: uuid
+          default: "valid-catalog-id"
         websiteId:
           type: string
           format: uuid
+          default: "valid-website-id"
