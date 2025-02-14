@@ -1,0 +1,280 @@
+openapi: 3.0.3
+info:
+  title: API Documentation
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+paths:
+  /users:
+    post:
+      summary: Save User
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Test User"
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "testpassword"
+      responses:
+        "201":
+          description: User created
+    get:
+      summary: Get All Users
+      responses:
+        "200":
+          description: List of users
+
+  /users/8b9082bf-36ab-4aff-870f-3cbe13573d7f:
+    get:
+      summary: Get User By Id
+      responses:
+        "200":
+          description: User details
+
+  /users/by-name:
+    get:
+      summary: Get User By Name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Test User"
+      responses:
+        "200":
+          description: User details
+
+  /users/exists:
+    get:
+      summary: Check If User Exists
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Test User"
+      responses:
+        "200":
+          description: User exists
+
+  /articles:
+    post:
+      summary: Save Article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Article'
+            example:
+              id: "e5501240-65f1-11e9-bf1f-33b019c20472"
+              name: "Test Article"
+              description: "This is a test article."
+              date: "2025-02-10"
+              link: "http://example.com"
+      responses:
+        "201":
+          description: Article created
+    get:
+      summary: Get Articles
+      responses:
+        "200":
+          description: List of articles
+
+  /articles/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f/lastRequestTime:
+    put:
+      summary: Update User Last Request Time
+      responses:
+        "200":
+          description: Last request time updated
+    get:
+      summary: Get User Last Request Time
+      responses:
+        "200":
+          description: Last request time
+
+  /articles/user/category:
+    post:
+      summary: Save Article Category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleCategory'
+            example:
+              articleId: "e5501240-65f1-11e9-bf1f-33b019c20472"
+              catalogId: "valid-catalog-id"
+              websiteId: "valid-website-id"
+      responses:
+        "201":
+          description: Category saved
+
+  /websites/basic:
+    get:
+      summary: Get Basic Websites
+      responses:
+        "200":
+          description: List of websites
+
+  /websites/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f:
+    get:
+      summary: Get User Websites
+      responses:
+        "200":
+          description: User's websites
+    post:
+      summary: Add User Website
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Test Website"
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "https://www.example.com"
+      responses:
+        "201":
+          description: Website added
+    delete:
+      summary: Delete Website By Name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Test Website"
+      responses:
+        "200":
+          description: Website deleted
+
+  /websites/exists:
+    get:
+      summary: Check If Website Exists By Name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Test Website"
+      responses:
+        "200":
+          description: Website exists
+
+  /catalogs/basic:
+    get:
+      summary: Get Basic Catalogs
+      responses:
+        "200":
+          description: List of catalogs
+
+  /catalogs/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f:
+    get:
+      summary: Get User Catalogs
+      responses:
+        "200":
+          description: User's catalogs
+
+  /catalogs/exists:
+    get:
+      summary: Check If Catalog Exists By Name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Test Catalog"
+      responses:
+        "200":
+          description: Catalog exists
+
+  /catalogs/name:
+    get:
+      summary: Get Catalog By Name
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Test Catalog"
+      responses:
+        "200":
+          description: Catalog details
+
+  /catalogs/delete:
+    delete:
+      summary: Delete Catalog By Name
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Test Catalog"
+      responses:
+        "200":
+          description: Catalog deleted
+
+components:
+  schemas:
+    Article:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date
+        link:
+          type: string
+          format: uri
+
+    ArticleCategory:
+      type: object
+      properties:
+        articleId:
+          type: string
+          format: uuid
+        catalogId:
+          type: string
+          format: uuid
+        websiteId:
+          type: string
+          format: uuid

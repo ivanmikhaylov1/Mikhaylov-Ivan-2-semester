@@ -3,6 +3,7 @@ package org.example.mikhaylovivan2semester.controller;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
+import org.example.mikhaylovivan2semester.api.UserApiDocumentation;
 import org.example.mikhaylovivan2semester.entity.Response;
 import org.example.mikhaylovivan2semester.entity.User;
 import org.example.mikhaylovivan2semester.service.interfaces.UserService;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 @Validated
-public class UserController {
+public class UserController implements UserApiDocumentation {
   private final UserService userService;
 
   @Autowired
@@ -27,6 +28,7 @@ public class UserController {
     this.userService = userService;
   }
 
+  @Override
   @GetMapping
   public ResponseEntity<Response<List<User>>> findAll() {
     log.info("Получен запрос на получение всех пользователей");
@@ -34,6 +36,7 @@ public class UserController {
     return ResponseEntity.ok(new Response<>(users));
   }
 
+  @Override
   @PostMapping
   public ResponseEntity<Response<User>> save(
       @NotBlank @Size(min = 3, max = 50) @RequestParam String name,
@@ -44,6 +47,7 @@ public class UserController {
         .orElseGet(() -> ResponseEntity.badRequest().body(new Response<>(400, "Не удалось создать пользователя")));
   }
 
+  @Override
   @GetMapping("/{userId}")
   public ResponseEntity<Response<User>> getById(@PathVariable UUID userId) {
     log.info("Получен запрос на получение пользователя по ID: {}", userId);
@@ -52,6 +56,7 @@ public class UserController {
         .orElseGet(() -> ResponseEntity.status(404).body(new Response<>(404, "Пользователь не найден")));
   }
 
+  @Override
   @GetMapping("/by-name")
   public ResponseEntity<Response<User>> findByName(@RequestParam @NotBlank String name) {
     log.info("Получен запрос на получение пользователя по имени: {}", name);
@@ -60,6 +65,7 @@ public class UserController {
         .orElseGet(() -> ResponseEntity.status(404).body(new Response<>(404, "Пользователь не найден")));
   }
 
+  @Override
   @GetMapping("/exists")
   public ResponseEntity<Response<Boolean>> exists(@RequestParam @NotBlank String name) {
     log.info("Получен запрос на проверку существования пользователя с именем: {}", name);

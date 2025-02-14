@@ -1,6 +1,7 @@
 package org.example.mikhaylovivan2semester.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.mikhaylovivan2semester.api.CatalogApiDocumentation;
 import org.example.mikhaylovivan2semester.entity.Catalog;
 import org.example.mikhaylovivan2semester.entity.Response;
 import org.example.mikhaylovivan2semester.service.implementations.CatalogServiceImpl;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/catalogs")
-public class CatalogController {
+public class CatalogController implements CatalogApiDocumentation {
   private final CatalogServiceImpl catalogService;
 
   @Autowired
@@ -23,6 +24,7 @@ public class CatalogController {
     this.catalogService = catalogService;
   }
 
+  @Override
   @GetMapping("/basic")
   public ResponseEntity<Response<List<Catalog>>> getBasicCatalogs() {
     log.info("Получен запрос на получение всех стандартных каталогов");
@@ -30,6 +32,7 @@ public class CatalogController {
     return ResponseEntity.ok(new Response<>(catalogs));
   }
 
+  @Override
   @GetMapping("/user/{userId}")
   public ResponseEntity<Response<List<Catalog>>> getUserCatalogs(@PathVariable UUID userId) {
     log.info("Получен запрос на получение всех пользовательских каталогов для пользователя с ID: {}", userId);
@@ -37,6 +40,7 @@ public class CatalogController {
     return ResponseEntity.ok(new Response<>(catalogs));
   }
 
+  @Override
   @GetMapping("/exists")
   public ResponseEntity<Response<Boolean>> existsByName(@RequestParam String name) {
     log.info("Получен запрос на проверку существования категории по названию c именем: {}", name);
@@ -44,6 +48,7 @@ public class CatalogController {
     return ResponseEntity.ok(new Response<>(exists));
   }
 
+  @Override
   @GetMapping("/name")
   public ResponseEntity<Response<Optional<Catalog>>> getByName(@RequestParam UUID userId, @RequestParam String name) {
     log.info("Получен запрос на получение категории по имени для пользователя с ID: {} и именем: {}", userId, name);
@@ -51,6 +56,7 @@ public class CatalogController {
     return ResponseEntity.ok(new Response<>(catalog));
   }
 
+  @Override
   @DeleteMapping("/delete")
   public ResponseEntity<Response<Void>> deleteByName(@RequestParam UUID userId, @RequestParam String name) {
     log.info("Получен запрос на удаление категории по имени для пользователя с ID: {} и именем: {}", userId, name);
@@ -58,7 +64,7 @@ public class CatalogController {
     return ResponseEntity.ok(new Response<>(200, "Категория успешно удалена"));
   }
 
-
+  @Override
   @PutMapping("/addToUser")
   public ResponseEntity<Response<Catalog>> addToUser(@RequestParam UUID userId, @RequestParam String name) {
     log.info("Получен запрос на добавление категории к пользователю с ID: {} и именем категории: {}", userId, name);
@@ -66,6 +72,7 @@ public class CatalogController {
     return ResponseEntity.status(201).body(new Response<>(catalog));
   }
 
+  @Override
   @PutMapping("/addUserCatalog")
   public ResponseEntity<Response<Catalog>> addUserCatalog(@RequestParam UUID userId, @RequestParam String name) {
     log.info("Получен запрос на добавление пользовательской категории для пользователя с ID: {} и именем категории: {}", userId, name);

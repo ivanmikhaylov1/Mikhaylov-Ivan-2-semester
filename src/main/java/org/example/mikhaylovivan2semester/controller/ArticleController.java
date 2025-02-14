@@ -3,6 +3,7 @@ package org.example.mikhaylovivan2semester.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.example.mikhaylovivan2semester.api.ArticleApiDocumentation;
 import org.example.mikhaylovivan2semester.entity.Article;
 import org.example.mikhaylovivan2semester.entity.Response;
 import org.example.mikhaylovivan2semester.service.interfaces.ArticleService;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/articles")
 @Validated
-public class ArticleController {
+public class ArticleController implements ArticleApiDocumentation {
   private final ArticleService articleService;
 
   @Autowired
@@ -27,6 +28,7 @@ public class ArticleController {
     this.articleService = articleService;
   }
 
+  @Override
   @GetMapping
   public ResponseEntity<Response<List<Article>>> getNewArticles() {
     log.info("Получен запрос на получение всех статей");
@@ -34,6 +36,7 @@ public class ArticleController {
     return ResponseEntity.ok(new Response<>(articles));
   }
 
+  @Override
   @PostMapping
   public ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody Article article) {
     log.info("Получен запрос на сохранение статьи: {}", article.name());
@@ -41,6 +44,7 @@ public class ArticleController {
     return ResponseEntity.status(201).body(new Response<>(201, "Статья успешно сохранена"));
   }
 
+  @Override
   @PutMapping("/user/{userId}/lastRequestTime")
   public ResponseEntity<Response<String>> updateUserLastRequestTime(@PathVariable UUID userId) {
     log.info("Получен запрос на обновление последнего времени запроса от пользователя: {}", userId);
@@ -48,6 +52,7 @@ public class ArticleController {
     return ResponseEntity.ok(new Response<>(200, "Время последнего запроса обновлено"));
   }
 
+  @Override
   @GetMapping("/user/{userId}/lastRequestTime")
   public ResponseEntity<Response<Date>> getUserLastRequestTime(@PathVariable UUID userId) {
     log.info("Получен запрос на получение последнего времени запроса от пользователя: {}", userId);
@@ -61,6 +66,7 @@ public class ArticleController {
     }
   }
 
+  @Override
   @PostMapping("/user/category")
   public ResponseEntity<Response<String>> saveArticleCategory(
       @NotNull @RequestParam UUID articleId,
