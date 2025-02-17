@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: Mikhaylov-Ivan-2-semester
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
