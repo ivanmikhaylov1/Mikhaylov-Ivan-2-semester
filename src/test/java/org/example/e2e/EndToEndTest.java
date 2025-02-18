@@ -2,7 +2,7 @@ package org.example.e2e;
 
 import org.example.mikhaylovivan2semester.Application;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
-import org.example.mikhaylovivan2semester.repository.UserRepository;
+import org.example.mikhaylovivan2semester.repository.implementations.UserRepositoryImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class EndToEndTest {
   @Autowired
-  private UserRepository userRepository;
+  private UserRepositoryImpl userRepository;
 
   @Autowired
   private TestRestTemplate restTemplate;

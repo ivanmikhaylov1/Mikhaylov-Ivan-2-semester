@@ -1,4 +1,4 @@
-package org.example.mikhaylovivan2semester.service.interfaces;
+package org.example.mikhaylovivan2semester.repository.interfaces;
 
 import org.example.mikhaylovivan2semester.entity.Catalog;
 
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface CatalogService {
+public interface CatalogRepository {
   Optional<Catalog> getByName(UUID userId, String name);
 
   void deleteByName(UUID userId, String name);
@@ -20,4 +20,6 @@ public interface CatalogService {
   List<Catalog> getBasicCatalogs();
 
   List<Catalog> getUserCatalogs(UUID userId);
+
+  void save(Catalog catalog);
 }

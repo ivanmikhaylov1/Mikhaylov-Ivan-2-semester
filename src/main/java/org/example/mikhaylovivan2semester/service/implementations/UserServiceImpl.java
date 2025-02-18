@@ -1,7 +1,7 @@
 package org.example.mikhaylovivan2semester.service.implementations;
 
 import org.example.mikhaylovivan2semester.dto.UserDTO;
-import org.example.mikhaylovivan2semester.repository.UserRepository;
+import org.example.mikhaylovivan2semester.repository.implementations.UserRepositoryImpl;
 import org.example.mikhaylovivan2semester.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,11 +13,11 @@ import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
-  private final UserRepository userRepository;
+  private final UserRepositoryImpl userRepository;
   private final BCryptPasswordEncoder passwordEncoder;
 
   @Autowired
-  private UserServiceImpl(UserRepository userRepository) {
+  public UserServiceImpl(UserRepositoryImpl userRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = new BCryptPasswordEncoder();
   }

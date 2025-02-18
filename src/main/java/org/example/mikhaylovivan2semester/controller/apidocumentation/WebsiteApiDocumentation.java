@@ -1,4 +1,4 @@
-package org.example.mikhaylovivan2semester.api;
+package org.example.mikhaylovivan2semester.controller.apidocumentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

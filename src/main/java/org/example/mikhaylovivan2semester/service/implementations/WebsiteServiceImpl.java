@@ -1,7 +1,7 @@
 package org.example.mikhaylovivan2semester.service.implementations;
 
 import org.example.mikhaylovivan2semester.entity.Website;
-import org.example.mikhaylovivan2semester.repository.WebsiteRepository;
+import org.example.mikhaylovivan2semester.repository.implementations.WebsiteRepositoryImpl;
 import org.example.mikhaylovivan2semester.service.interfaces.WebsiteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +12,10 @@ import java.util.UUID;
 
 @Service
 public class WebsiteServiceImpl implements WebsiteService {
-  private final WebsiteRepository websiteRepository;
+  private final WebsiteRepositoryImpl websiteRepository;
 
   @Autowired
-  private WebsiteServiceImpl(WebsiteRepository websiteRepository) {
+  public WebsiteServiceImpl(WebsiteRepositoryImpl websiteRepository) {
     this.websiteRepository = websiteRepository;
   }
 

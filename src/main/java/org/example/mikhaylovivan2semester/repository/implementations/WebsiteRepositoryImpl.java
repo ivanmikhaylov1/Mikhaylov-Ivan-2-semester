@@ -1,7 +1,7 @@
-package org.example.mikhaylovivan2semester.repository;
+package org.example.mikhaylovivan2semester.repository.implementations;
 
-import lombok.extern.slf4j.Slf4j;
 import org.example.mikhaylovivan2semester.entity.Website;
+import org.example.mikhaylovivan2semester.repository.interfaces.WebsiteRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -10,59 +10,58 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Repository
-public class WebsiteRepository {
+public class WebsiteRepositoryImpl implements WebsiteRepository {
   private static final HashMap<UUID, Website> websites = new HashMap<>();
 
-  public WebsiteRepository() {
+  public WebsiteRepositoryImpl() {
     save(new Website(UUID.randomUUID(), "Google", "https://google.com", null));
     save(new Website(UUID.randomUUID(), "YouTube", "https://youtube.com", null));
   }
 
+  @Override
   public List<Website> getBasicWebsites() {
-    log.info("Получение базовых сайтов");
     return websites.values().stream()
         .filter(website -> website.userId() == null)
         .collect(Collectors.toList());
   }
 
+  @Override
   public List<Website> getUserWebsites(UUID userId) {
-    log.info("Получение сайтов пользователя userId: {}", userId);
     return websites.values().stream()
         .filter(website -> userId.equals(website.userId()))
         .collect(Collectors.toList());
   }
 
+  @Override
   public boolean existsByName(String name) {
-    log.info("Проверка существования сайта с именем: {}", name);
     return websites.values().stream().anyMatch(website -> website.name().equalsIgnoreCase(name));
   }
 
+  @Override
   public Optional<Website> getByName(UUID userId, String name) {
-    log.info("Поиск сайта '{}' для userId: {}", name, userId);
     return websites.values().stream()
         .filter(website -> website.name().equalsIgnoreCase(name) &&
             (website.userId() == null || website.userId().equals(userId)))
         .findFirst();
   }
 
+  @Override
   public Website addUserWebsite(UUID userId, String name, String url) {
-    log.info("Добавление сайта '{}' (URL: {}) для userId: {}", name, url, userId);
     Website website = new Website(UUID.randomUUID(), name, url, userId);
     websites.put(website.id(), website);
     return website;
   }
 
+  @Override
   public void deleteByName(UUID userId, String name) {
-    log.info("Удаление сайта '{}' для userId: {}", name, userId);
     websites.entrySet().removeIf(entry ->
         entry.getValue().name().equalsIgnoreCase(name) &&
             (entry.getValue().userId() == null || entry.getValue().userId().equals(userId)));
   }
 
+  @Override
   public void save(Website website) {
     websites.put(website.id(), website);
-    log.info("Сохранен сайт: {}", website);
   }
 }
