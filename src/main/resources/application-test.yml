@@ -1,0 +1,10 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: test-application
+
+logging:
+  level:
+    org.springframework.web: DEBUG
