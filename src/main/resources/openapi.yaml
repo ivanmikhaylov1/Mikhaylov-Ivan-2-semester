@@ -11,6 +11,22 @@ security:
   - bearerAuth: []
 
 paths:
+  /admin/random-uuid:
+    get:
+      summary: "Generate a random UUID"
+      description: "Returns a randomly generated UUID."
+      operationId: "getRandomUuid"
+      tags:
+        - "Actuator"
+      responses:
+        "200":
+          description: "Successfully generated a random UUID"
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+
   /auth/register:
     post:
       summary: Register a new user
