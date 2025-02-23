@@ -1,11 +1,15 @@
 package org.example.mikhaylovivan2semester.aspect;
 
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import java.time.Duration;
+import java.time.Instant;
 
 @Aspect
 @Component
@@ -58,5 +62,20 @@ public class LoggingAspect {
       log.error("[Репозиторий] Ошибка при выполнении метода {}: {}", methodName, e.getMessage());
       throw e;
     }
+  }
+
+  @Before("controllerMethods()")
+  public void logMethodName(JoinPoint joinPoint) {
+    System.out.println("Вызов метода: " + joinPoint.getSignature().getName());
+  }
+
+  @Around("controllerMethods()")
+  public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+    Instant start = Instant.now();
+    Object result = joinPoint.proceed();
+    Instant end = Instant.now();
+    System.out.println("Время выполнения метода " + joinPoint.getSignature().getName() + ": " +
+        Duration.between(start, end).toMillis() + " мс");
+    return result;
   }
 }

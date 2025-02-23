@@ -7,10 +7,63 @@ servers:
   - url: http://localhost:8080
     description: Local server
 
+security:
+  - bearerAuth: []
+
 paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "newuser"
+                password:
+                  type: string
+                  example: "newpassword"
+      responses:
+        "201":
+          description: User registered successfully
+      security: []
+
+  /auth/login:
+    post:
+      summary: Login and obtain a JWT token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "newuser"
+                password:
+                  type: string
+                  example: "newpassword"
+      responses:
+        "200":
+          description: JWT token returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      security: []
+
   /users:
     post:
-      summary: Save User
+      summary: Save User (requires authentication)
       requestBody:
         required: true
         content:
@@ -20,22 +73,22 @@ paths:
               properties:
                 name:
                   type: string
-                  default: "Test User"
+                  example: "Test User"
                 password:
                   type: string
-                  default: "testpassword"
+                  example: "testpassword"
       responses:
         "201":
           description: User created
     get:
-      summary: Get All Users
+      summary: Get All Users (requires authentication)
       responses:
         "200":
           description: List of users
 
   /users/{userId}:
     get:
-      summary: Get User By Id
+      summary: Get User By Id (requires authentication)
       parameters:
         - name: userId
           in: path
@@ -43,42 +96,42 @@ paths:
           schema:
             type: string
             format: uuid
-            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+            example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
         "200":
           description: User details
 
   /users/by-name:
     get:
-      summary: Get User By Name
+      summary: Get User By Name (requires authentication)
       parameters:
         - name: name
           in: query
           required: true
           schema:
             type: string
-            default: "Test User"
+            example: "Test User"
       responses:
         "200":
           description: User details
 
   /users/exists:
     get:
-      summary: Check If User Exists
+      summary: Check If User Exists (requires authentication)
       parameters:
         - name: name
           in: query
           required: true
           schema:
             type: string
-            default: "Test User"
+            example: "Test User"
       responses:
         "200":
           description: User exists
 
   /articles:
     post:
-      summary: Save Article
+      summary: Save Article (requires authentication)
       requestBody:
         required: true
         content:
@@ -89,14 +142,14 @@ paths:
         "201":
           description: Article created
     get:
-      summary: Get Articles
+      summary: Get Articles (requires authentication)
       responses:
         "200":
           description: List of articles
 
   /articles/user/{userId}/lastRequestTime:
     put:
-      summary: Update User Last Request Time
+      summary: Update User Last Request Time (requires authentication)
       parameters:
         - name: userId
           in: path
@@ -104,12 +157,12 @@ paths:
           schema:
             type: string
             format: uuid
-            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+            example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
         "200":
           description: Last request time updated
     get:
-      summary: Get User Last Request Time
+      summary: Get User Last Request Time (requires authentication)
       parameters:
         - name: userId
           in: path
@@ -117,14 +170,14 @@ paths:
           schema:
             type: string
             format: uuid
-            default: 8b9082bf-36ab-4aff-870f-3cbe13573d7f
+            example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
         "200":
           description: Last request time
 
   /articles/user/category:
     post:
-      summary: Save Article Category
+      summary: Save Article Category (requires authentication)
       requestBody:
         required: true
         content:
@@ -137,14 +190,14 @@ paths:
 
   /websites/basic:
     get:
-      summary: Get Basic Websites
+      summary: Get Basic Websites (requires authentication)
       responses:
         "200":
           description: List of websites
 
   /websites/user/{userId}:
     get:
-      summary: Get User Websites
+      summary: Get User Websites (requires authentication)
       parameters:
         - name: userId
           in: path
@@ -152,12 +205,12 @@ paths:
           schema:
             type: string
             format: uuid
-            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+            example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
         "200":
           description: User's websites
     post:
-      summary: Add User Website
+      summary: Add User Website (requires authentication)
       requestBody:
         required: true
         content:
@@ -168,42 +221,42 @@ paths:
         "201":
           description: Website added
     delete:
-      summary: Delete Website By Name
+      summary: Delete Website By Name (requires authentication)
       parameters:
         - name: name
           in: query
           required: true
           schema:
             type: string
-            default: "Test Website"
+            example: "Test Website"
       responses:
         "200":
           description: Website deleted
 
   /websites/exists:
     get:
-      summary: Check If Website Exists By Name
+      summary: Check If Website Exists By Name (requires authentication)
       parameters:
         - name: name
           in: query
           required: true
           schema:
             type: string
-            default: "Test Website"
+            example: "Test Website"
       responses:
         "200":
           description: Website exists
 
   /catalogs/basic:
     get:
-      summary: Get Basic Catalogs
+      summary: Get Basic Catalogs (requires authentication)
       responses:
         "200":
           description: List of catalogs
 
   /catalogs/user/{userId}:
     get:
-      summary: Get User Catalogs
+      summary: Get User Catalogs (requires authentication)
       parameters:
         - name: userId
           in: path
@@ -211,28 +264,28 @@ paths:
           schema:
             type: string
             format: uuid
-            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+            example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
         "200":
           description: User's catalogs
 
   /catalogs/exists:
     get:
-      summary: Check If Catalog Exists By Name
+      summary: Check If Catalog Exists By Name (requires authentication)
       parameters:
         - name: name
           in: query
           required: true
           schema:
             type: string
-            default: "Test Catalog"
+            example: "Test Catalog"
       responses:
         "200":
           description: Catalog exists
 
   /catalogs/name:
     get:
-      summary: Get Catalog By Name
+      summary: Get Catalog By Name (requires authentication)
       parameters:
         - name: userId
           in: query
@@ -240,20 +293,20 @@ paths:
           schema:
             type: string
             format: uuid
-            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+            example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
         - name: name
           in: query
           required: true
           schema:
             type: string
-            default: "Test Catalog"
+            example: "Test Catalog"
       responses:
         "200":
           description: Catalog details
 
   /catalogs/delete:
     delete:
-      summary: Delete Catalog By Name
+      summary: Delete Catalog By Name (requires authentication)
       parameters:
         - name: userId
           in: query
@@ -261,20 +314,20 @@ paths:
           schema:
             type: string
             format: uuid
-            default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+            example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
         - name: name
           in: query
           required: true
           schema:
             type: string
-            default: "Test Catalog"
+            example: "Test Catalog"
       responses:
         "200":
           description: Catalog deleted
 
   /catalogs/addToUser:
     put:
-      summary: Add Catalog To User
+      summary: Add Catalog To User (requires authentication)
       requestBody:
         required: true
         content:
@@ -285,10 +338,10 @@ paths:
                 userId:
                   type: string
                   format: uuid
-                  default: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+                  example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
                 name:
                   type: string
-                  default: "Test Catalog"
+                  example: "Test Catalog"
       responses:
         "201":
           description: Catalog added to user
@@ -305,21 +358,21 @@ components:
         id:
           type: string
           format: uuid
-          default: "e5501240-65f1-11e9-bf1f-33b019c20472"
+          example: "e5501240-65f1-11e9-bf1f-33b019c20472"
         name:
           type: string
-          default: "Test Article"
+          example: "Test Article"
         description:
           type: string
-          default: "This is a test article."
+          example: "This is a test article."
         date:
           type: string
           format: date
-          default: "2025-02-10"
+          example: "2025-02-10"
         link:
           type: string
           format: uri
-          default: "http://example.com"
+          example: "http://example.com"
 
     ArticleCategory:
       type: object
@@ -327,26 +380,26 @@ components:
         articleId:
           type: string
           format: uuid
-          default: "e5501240-65f1-11e9-bf1f-33b019c20472"
+          example: "e5501240-65f1-11e9-bf1f-33b019c20472"
         catalogId:
           type: string
           format: uuid
-          default: "valid-catalog-id"
+          example: "valid-catalog-id"
         websiteId:
           type: string
           format: uuid
-          default: "valid-website-id"
+          example: "valid-website-id"
 
     AddWebsiteRequest:
       type: object
       properties:
         name:
           type: string
-          default: "Test Website"
+          example: "Test Website"
         url:
           type: string
           format: uri
-          default: "https://www.example.com"
+          example: "https://www.example.com"
 
     Catalog:
       type: object
@@ -356,4 +409,10 @@ components:
           format: uuid
         name:
           type: string
-          default: "Test Catalog"
+          example: "Test Catalog"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

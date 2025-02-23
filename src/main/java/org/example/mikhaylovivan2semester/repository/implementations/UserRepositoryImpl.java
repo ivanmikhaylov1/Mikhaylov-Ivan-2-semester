@@ -6,6 +6,7 @@ import org.example.mikhaylovivan2semester.repository.interfaces.UserRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.Objects;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -40,18 +41,25 @@ public class UserRepositoryImpl implements UserRepository {
   @Override
   public Optional<UserDTO> findByName(String name) {
     return users.values().stream()
-        .filter(user -> user.name().equals(name))
+        .filter(user -> Objects.equals(user.name(), name))
         .findFirst()
         .map(user -> new UserDTO(user.id(), user.name()));
   }
 
   @Override
   public boolean exists(String name) {
-    return users.values().stream().anyMatch(user -> user.name().equals(name));
+    return users.values().stream().anyMatch(user -> Objects.equals(user.name(), name));
   }
 
   @Override
   public void delete(UUID userId) {
     users.remove(userId);
+  }
+
+  @Override
+  public Optional<User> findEntityByName(String name) {
+    return users.values().stream()
+        .filter(user -> Objects.equals(user.name(), name))
+        .findFirst();
   }
 }

@@ -8,3 +8,15 @@ server:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /admin
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: false

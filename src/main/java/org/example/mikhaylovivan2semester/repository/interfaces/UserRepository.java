@@ -1,6 +1,7 @@
 package org.example.mikhaylovivan2semester.repository.interfaces;
 
 import org.example.mikhaylovivan2semester.dto.UserDTO;
+import org.example.mikhaylovivan2semester.entity.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +19,6 @@ public interface UserRepository {
   boolean exists(String name);
 
   void delete(UUID userId);
+
+  Optional<User> findEntityByName(String name);
 }
