@@ -37,7 +37,7 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                name:
                   type: string
                   example: "newuser"
                 password:
