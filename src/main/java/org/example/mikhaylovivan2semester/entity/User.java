@@ -9,4 +9,5 @@ public record User(
     UUID id,
     @NotBlank @Size(min = 3, max = 50) String name,
     @NotBlank @Size(min = 6) String password
-) {}
+) {
+}

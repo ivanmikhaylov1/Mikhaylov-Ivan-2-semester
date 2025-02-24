@@ -9,14 +9,12 @@ import java.util.UUID;
 
 @Getter
 public class CreateWebsiteRequest {
+  private final UUID userId;
   @NotBlank
   private String name;
-
   @URL
   @Size(min = 5, max = 30)
   private String url;
-
-  private final UUID userId;
 
   public CreateWebsiteRequest(String name, String url, UUID userId) {
     this.name = name;

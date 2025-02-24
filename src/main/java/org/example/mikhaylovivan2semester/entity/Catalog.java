@@ -10,5 +10,6 @@ public record Catalog(
     @NotNull UUID catalogId,
     @NotBlank @Size(min = 3, max = 20) String name,
     UUID userId
-) {}
+) {
+}
 

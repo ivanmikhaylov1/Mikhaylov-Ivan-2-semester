@@ -1,9 +1,9 @@
 package org.example.mikhaylovivan2semester.controller;
 
 import org.example.mikhaylovivan2semester.controller.apidocumentation.CatalogApiDocumentation;
-import org.example.mikhaylovivan2semester.entity.Catalog;
 import org.example.mikhaylovivan2semester.dto.Response;
 import org.example.mikhaylovivan2semester.dto.request.CreateCatalogRequest;
+import org.example.mikhaylovivan2semester.entity.Catalog;
 import org.example.mikhaylovivan2semester.service.interfaces.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

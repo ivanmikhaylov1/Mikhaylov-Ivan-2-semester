@@ -6,7 +6,6 @@ import org.example.mikhaylovivan2semester.repository.interfaces.UserRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-import java.util.Objects;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {

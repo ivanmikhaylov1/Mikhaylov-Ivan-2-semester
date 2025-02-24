@@ -4,6 +4,8 @@ import org.example.mikhaylovivan2semester.entity.Catalog;
 import org.example.mikhaylovivan2semester.repository.interfaces.CatalogRepository;
 import org.example.mikhaylovivan2semester.service.interfaces.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,11 +27,13 @@ public class CatalogServiceImpl implements CatalogService {
   }
 
   @Override
+  @CacheEvict(value = "userCatalogs", key = "#userId")
   public void deleteByName(UUID userId, String name) {
     catalogRepository.deleteByName(userId, name);
   }
 
   @Override
+  @CacheEvict(value = "userCatalogs", key = "#userId")
   public Catalog addToUser(UUID userId, String name) {
     return catalogRepository.addToUser(userId, name);
   }
@@ -45,11 +49,13 @@ public class CatalogServiceImpl implements CatalogService {
   }
 
   @Override
+  @Cacheable("basicCatalogs")
   public List<Catalog> getBasicCatalogs() {
     return catalogRepository.getBasicCatalogs();
   }
 
   @Override
+  @Cacheable(value = "userCatalogs", key = "#userId")
   public List<Catalog> getUserCatalogs(UUID userId) {
     return catalogRepository.getUserCatalogs(userId);
   }

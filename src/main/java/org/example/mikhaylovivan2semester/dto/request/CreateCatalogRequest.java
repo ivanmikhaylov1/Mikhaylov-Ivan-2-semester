@@ -8,11 +8,10 @@ import java.util.UUID;
 
 @Getter
 public class CreateCatalogRequest {
+  private final UUID userId;
   @NotBlank
   @Size(min = 3, max = 20)
   private String name;
-
-  private final UUID userId;
 
   public CreateCatalogRequest(String name, UUID userId) {
     this.name = name;

@@ -12,4 +12,5 @@ public record Article(
     @NotBlank @Size(min = 10, max = 500) String description,
     @NotBlank String date,
     @NotBlank String link
-) {}
+) {
+}

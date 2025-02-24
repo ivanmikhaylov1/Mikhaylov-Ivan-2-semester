@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Repository
 public class CatalogRepositoryImpl implements CatalogRepository {
@@ -56,14 +55,14 @@ public class CatalogRepositoryImpl implements CatalogRepository {
   public List<Catalog> getBasicCatalogs() {
     return catalogs.values().stream()
         .filter(c -> c.userId() == null)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Override
   public List<Catalog> getUserCatalogs(UUID userId) {
     return catalogs.values().stream()
         .filter(c -> c.userId() != null && c.userId().equals(userId))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Override

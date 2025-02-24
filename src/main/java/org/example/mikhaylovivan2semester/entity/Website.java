@@ -12,4 +12,5 @@ public record Website(
     @NotBlank String name,
     @URL @Size(min = 5, max = 30) String url,
     UUID userId
-) {}
+) {
+}

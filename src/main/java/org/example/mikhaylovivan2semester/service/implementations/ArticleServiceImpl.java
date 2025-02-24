@@ -4,14 +4,18 @@ import org.example.mikhaylovivan2semester.entity.Article;
 import org.example.mikhaylovivan2semester.repository.interfaces.ArticleRepository;
 import org.example.mikhaylovivan2semester.service.interfaces.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
+
   private final ArticleRepository articleRepository;
 
   @Autowired
@@ -20,11 +24,14 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
+  @Cacheable("articles")
   public List<Article> getAllArticles() {
     return articleRepository.getAllArticles();
   }
 
   @Override
+  @CacheEvict(value = "articles", allEntries = true)
+  @Transient
   public void saveArticle(Article article) {
     articleRepository.saveArticle(article);
   }

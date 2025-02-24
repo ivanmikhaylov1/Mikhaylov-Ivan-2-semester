@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+
 import java.time.Duration;
 import java.time.Instant;
 
@@ -17,13 +18,16 @@ import java.time.Instant;
 public class LoggingAspect {
 
   @Pointcut("within(org.example.mikhaylovivan2semester.controller..*)")
-  public void controllerMethods() {}
+  public void controllerMethods() {
+  }
 
   @Pointcut("within(org.example.mikhaylovivan2semester.repository.implementations..*)")
-  public void repositoryMethods() {}
+  public void repositoryMethods() {
+  }
 
   @Pointcut("within(org.example.mikhaylovivan2semester.service.implementations..*)")
-  public void serviceMethods() {}
+  public void serviceMethods() {
+  }
 
   @Around("controllerMethods()")
   public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {

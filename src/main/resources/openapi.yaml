@@ -8,7 +8,7 @@ servers:
     description: Local server
 
 security:
-  - bearerAuth: []
+  - bearerAuth: [ ]
 
 paths:
   /admin/random-uuid:
@@ -46,7 +46,7 @@ paths:
       responses:
         "201":
           description: User registered successfully
-      security: []
+      security: [ ]
 
   /auth/login:
     post:
@@ -58,7 +58,7 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                name:
                   type: string
                   example: "newuser"
                 password:
@@ -75,7 +75,7 @@ paths:
                   token:
                     type: string
                     example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-      security: []
+      security: [ ]
 
   /users:
     post:
