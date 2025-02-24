@@ -2,7 +2,7 @@ package org.example.mikhaylovivan2semester.service.implementations;
 
 import io.jsonwebtoken.Jwts;
 import jakarta.validation.constraints.NotBlank;
-import org.example.mikhaylovivan2semester.config.JwtKeyProvider;
+import org.example.mikhaylovivan2semester.config.security.JwtKeyProvider;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
 import org.example.mikhaylovivan2semester.entity.User;
 import org.example.mikhaylovivan2semester.exception.InvalidCredentialsException;

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties = "spring.config.location=classpath:/application-test.yml")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

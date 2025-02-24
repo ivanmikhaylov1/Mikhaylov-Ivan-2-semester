@@ -1,4 +1,4 @@
-package org.example.mikhaylovivan2semester.config;
+package org.example.mikhaylovivan2semester.config.security;
 
 import org.example.mikhaylovivan2semester.security.JwtLoggingFilter;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package org.example.mikhaylovivan2semester.config;
+package org.example.mikhaylovivan2semester.config.security;
 
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;

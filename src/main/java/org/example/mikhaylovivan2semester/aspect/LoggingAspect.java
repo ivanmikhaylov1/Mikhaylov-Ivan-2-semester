@@ -29,6 +29,10 @@ public class LoggingAspect {
   public void serviceMethods() {
   }
 
+  @Pointcut("within(org.example.mikhaylovivan2semester.config.database..*)")
+  public void databaseMethods() {
+  }
+
   @Around("controllerMethods()")
   public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {
     String methodName = joinPoint.getSignature().getName();
@@ -81,5 +85,21 @@ public class LoggingAspect {
     System.out.println("Время выполнения метода " + joinPoint.getSignature().getName() + ": " +
         Duration.between(start, end).toMillis() + " мс");
     return result;
+  }
+
+  @Around("databaseMethods()")
+  public Object logDatabase(ProceedingJoinPoint joinPoint) throws Throwable {
+    String methodName = joinPoint.getSignature().getName();
+    try {
+      Instant start = Instant.now();
+      Object result = joinPoint.proceed();
+      Instant end = Instant.now();
+      long duration = Duration.between(start, end).toMillis();
+      log.info("[База данных] Метод {} выполнен успешно за {} мс", methodName, duration);
+      return result;
+    } catch (Exception e) {
+      log.error("[База данных] Ошибка при выполнении метода {}: {}", methodName, e.getMessage());
+      throw e;
+    }
   }
 }
