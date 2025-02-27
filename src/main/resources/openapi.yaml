@@ -239,6 +239,13 @@ paths:
     delete:
       summary: Delete Website By Name (requires authentication)
       parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
         - name: name
           in: query
           required: true
@@ -246,8 +253,10 @@ paths:
             type: string
             example: "Test Website"
       responses:
-        "200":
-          description: Website deleted
+        '200':
+          description: Website successfully deleted
+        '400':
+          description: Invalid input data
 
   /websites/exists:
     get:
@@ -270,6 +279,25 @@ paths:
         "200":
           description: List of catalogs
 
+  /catalogs/create:
+    post:
+      summary: Create a new catalog (requires authentication)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCatalogRequest'
+      responses:
+        '201':
+          description: Catalog created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Catalog'
+        '400':
+          description: Invalid input data
+
   /catalogs/user/{userId}:
     get:
       summary: Get User Catalogs (requires authentication)
@@ -282,7 +310,7 @@ paths:
             format: uuid
             example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
       responses:
-        "200":
+        '200':
           description: User's catalogs
 
   /catalogs/exists:
@@ -299,12 +327,12 @@ paths:
         "200":
           description: Catalog exists
 
-  /catalogs/name:
+  /catalogs/user/{userId}/by-name:
     get:
       summary: Get Catalog By Name (requires authentication)
       parameters:
         - name: userId
-          in: query
+          in: path
           required: true
           schema:
             type: string
@@ -365,7 +393,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Catalog'
-
 components:
   schemas:
     Article:
@@ -426,6 +453,20 @@ components:
         name:
           type: string
           example: "Test Catalog"
+
+    CreateCatalogRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          example: "8b9082bf-36ab-4aff-870f-3cbe13573d7f"
+        name:
+          type: string
+          example: "New Catalog"
+      required:
+        - userId
+        - name
 
   securitySchemes:
     bearerAuth:

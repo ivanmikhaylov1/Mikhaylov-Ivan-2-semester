@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import org.example.mikhaylovivan2semester.dto.Response;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
-import org.example.mikhaylovivan2semester.dto.request.CreateUserRequest;
+import org.example.mikhaylovivan2semester.dto.request.create.CreateUserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

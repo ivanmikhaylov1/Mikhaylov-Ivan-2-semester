@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.example.mikhaylovivan2semester.controller.apidocumentation.UserApiDocumentation;
 import org.example.mikhaylovivan2semester.dto.Response;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
-import org.example.mikhaylovivan2semester.dto.request.CreateUserRequest;
+import org.example.mikhaylovivan2semester.dto.request.create.CreateUserRequest;
 import org.example.mikhaylovivan2semester.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

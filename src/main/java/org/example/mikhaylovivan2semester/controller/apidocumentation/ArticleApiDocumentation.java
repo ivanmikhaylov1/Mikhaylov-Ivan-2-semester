@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.mikhaylovivan2semester.dto.Response;
-import org.example.mikhaylovivan2semester.dto.request.CreateArticleRequest;
+import org.example.mikhaylovivan2semester.dto.request.create.CreateArticleRequest;
 import org.example.mikhaylovivan2semester.entity.Article;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

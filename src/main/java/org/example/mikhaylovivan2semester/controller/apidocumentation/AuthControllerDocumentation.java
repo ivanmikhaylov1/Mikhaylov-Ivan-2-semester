@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.mikhaylovivan2semester.dto.Response;
-import org.example.mikhaylovivan2semester.dto.request.CreateUserRequest;
+import org.example.mikhaylovivan2semester.dto.request.create.CreateUserRequest;
 import org.example.mikhaylovivan2semester.dto.request.LoginRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package org.example.mikhaylovivan2semester.dto.request;
+package org.example.mikhaylovivan2semester.dto.request.create;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

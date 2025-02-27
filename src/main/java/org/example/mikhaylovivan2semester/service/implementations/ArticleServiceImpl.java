@@ -1,14 +1,14 @@
 package org.example.mikhaylovivan2semester.service.implementations;
 
 import org.example.mikhaylovivan2semester.entity.Article;
-import org.example.mikhaylovivan2semester.repository.interfaces.ArticleRepository;
+import org.example.mikhaylovivan2semester.repository.ArticleRepository;
 import org.example.mikhaylovivan2semester.service.interfaces.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
+import jakarta.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -26,19 +26,21 @@ public class ArticleServiceImpl implements ArticleService {
   @Override
   @Cacheable("articles")
   public List<Article> getAllArticles() {
-    return articleRepository.getAllArticles();
+    return articleRepository.findAll();
   }
 
   @Override
   @CacheEvict(value = "articles", allEntries = true)
-  @Transient
+  @Transactional
   public void saveArticle(Article article) {
-    articleRepository.saveArticle(article);
+    articleRepository.save(article);
   }
 
   @Override
+  @Transactional
   public void updateUserLastRequestTime(UUID userId) {
-    articleRepository.updateUserLastRequestTime(userId);
+    Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+    articleRepository.updateUserLastRequestTime(userId, currentTime);
   }
 
   @Override
@@ -47,6 +49,7 @@ public class ArticleServiceImpl implements ArticleService {
   }
 
   @Override
+  @Transactional
   public void saveArticleCategory(UUID articleId, UUID catalogId, UUID websiteId) {
     articleRepository.saveArticleCategory(articleId, catalogId, websiteId);
   }

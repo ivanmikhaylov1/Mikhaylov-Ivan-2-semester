@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.mikhaylovivan2semester.controller.apidocumentation.ArticleApiDocumentation;
 import org.example.mikhaylovivan2semester.dto.Response;
-import org.example.mikhaylovivan2semester.dto.request.CreateArticleRequest;
+import org.example.mikhaylovivan2semester.dto.request.create.CreateArticleRequest;
 import org.example.mikhaylovivan2semester.entity.Article;
 import org.example.mikhaylovivan2semester.service.interfaces.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +36,12 @@ public class ArticleController implements ArticleApiDocumentation {
 
   @Override
   @PostMapping
-  public ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody CreateArticleRequest createArticleRequest) {
-    if (createArticleRequest == null) {
-      return ResponseEntity.badRequest().body(new Response<>(400, "Некорректные данные запроса"));
-    }
-
-    Article article = new Article(UUID.randomUUID(),
-        createArticleRequest.getName(),
-        createArticleRequest.getDescription(),
-        createArticleRequest.getDate(),
-        createArticleRequest.getLink()
+  public ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody CreateArticleRequest request) {
+    Article article = new Article(
+        request.getTitle(),
+        request.getDescription(),
+        request.getDate(),
+        request.getLink()
     );
     articleService.saveArticle(article);
     return ResponseEntity.status(201).body(new Response<>(201, "Статья успешно сохранена"));
@@ -62,7 +58,6 @@ public class ArticleController implements ArticleApiDocumentation {
   @GetMapping("/user/{userId}/lastRequestTime")
   public ResponseEntity<Response<Date>> getUserLastRequestTime(@PathVariable UUID userId) {
     Date lastRequestTime = articleService.getUserLastRequestTime(userId);
-
     if (lastRequestTime != null) {
       return ResponseEntity.ok(new Response<>(lastRequestTime));
     } else {

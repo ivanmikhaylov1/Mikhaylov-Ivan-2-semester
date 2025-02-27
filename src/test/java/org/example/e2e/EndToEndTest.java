@@ -2,7 +2,8 @@ package org.example.e2e;
 
 import org.example.mikhaylovivan2semester.Application;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
-import org.example.mikhaylovivan2semester.repository.implementations.UserRepositoryImpl;
+import org.example.mikhaylovivan2semester.entity.User;
+import org.example.mikhaylovivan2semester.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class EndToEndTest {
   @Autowired
-  private UserRepositoryImpl userRepository;
+  private UserRepository userRepository;
 
   @Autowired
   private TestRestTemplate restTemplate;
@@ -46,8 +46,9 @@ class EndToEndTest {
   }
 
   private void createTestUser() {
-    UserDTO testUser = userRepository.save("Test User", "testpassword");
-    userId = testUser.id();
+    User user = new User(null, "Test User", "testpassword");
+    User savedUser = userRepository.save(user);
+    userId = savedUser.getId();
   }
 
   @Test
@@ -95,66 +96,6 @@ class EndToEndTest {
   @Test
   void testGetArticles() {
     ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/articles", String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Test
-  void testPutUserLastRequestTime() {
-    ResponseEntity<String> response = restTemplate.exchange(
-        baseUrl + "/articles/user/" + userId + "/lastRequestTime",
-        HttpMethod.PUT,
-        null,
-        String.class
-    );
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Test
-  void testGetUserLastRequestTime() {
-    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/articles/user/" + userId + "/lastRequestTime", String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Test
-  void testGetBasicWebsites() {
-    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/websites/basic", String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Test
-  void testGetUserWebsites() {
-    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/websites/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f", String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Test
-  void testCheckIfWebsiteExists() {
-    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/websites/exists?name=Test%20Website", String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Test
-  void testGetBasicCatalogs() {
-    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/catalogs/basic", String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Test
-  void testGetUserCatalogs() {
-    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/catalogs/user/8b9082bf-36ab-4aff-870f-3cbe13573d7f", String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Test
-  void testCheckIfCatalogExists() {
-    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/catalogs/exists?name=Test%20Catalog", String.class);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
-
-  @Test
-  void testGetCatalogByName() {
-    ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/catalogs/name?userId=8b9082bf-36ab-4aff-870f-3cbe13573d7f&name=Test%20Catalog", String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 }

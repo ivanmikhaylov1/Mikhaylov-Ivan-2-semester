@@ -7,7 +7,7 @@ import org.example.mikhaylovivan2semester.dto.UserDTO;
 import org.example.mikhaylovivan2semester.entity.User;
 import org.example.mikhaylovivan2semester.exception.InvalidCredentialsException;
 import org.example.mikhaylovivan2semester.exception.UserAlreadyExistsException;
-import org.example.mikhaylovivan2semester.repository.interfaces.UserRepository;
+import org.example.mikhaylovivan2semester.repository.UserRepository;
 import org.example.mikhaylovivan2semester.service.interfaces.AuthService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,26 +31,29 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserDTO registerUser(String name, String password) {
-    if (userRepository.exists(name)) {
+    if (userRepository.existsByName(name)) {
       throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
     }
     String hashedPassword = passwordEncoder.encode(password);
-    return userRepository.save(name, hashedPassword);
+    User user = new User(null, name, hashedPassword);
+    User savedUser = userRepository.save(user);
+    return new UserDTO(savedUser.getId(), savedUser.getName());
   }
 
   @Override
   public String authenticate(@NotBlank String name, @NotBlank String password) {
-    Optional<User> userOptional = userRepository.findEntityByName(name);
+    Optional<User> userOptional = userRepository.findByName(name);
     if (userOptional.isEmpty()) {
       throw new InvalidCredentialsException("Неверное имя пользователя или пароль");
     }
     User user = userOptional.get();
-    if (!passwordEncoder.matches(password, user.password())) {
+    if (!passwordEncoder.matches(password, user.getPassword())) {
       throw new InvalidCredentialsException("Неверное имя пользователя или пароль");
     }
     return generateToken(name);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public String generateToken(String name) {
     long now = System.currentTimeMillis();

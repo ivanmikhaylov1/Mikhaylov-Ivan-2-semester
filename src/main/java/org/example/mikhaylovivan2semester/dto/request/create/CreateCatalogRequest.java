@@ -1,20 +1,20 @@
-package org.example.mikhaylovivan2semester.dto.request;
+package org.example.mikhaylovivan2semester.dto.request.create;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Getter
+@Setter
 public class CreateCatalogRequest {
-  private final UUID userId;
+  @NotNull
+  private UUID userId;
+
   @NotBlank
   @Size(min = 3, max = 20)
   private String name;
-
-  public CreateCatalogRequest(String name, UUID userId) {
-    this.name = name;
-    this.userId = userId;
-  }
 }

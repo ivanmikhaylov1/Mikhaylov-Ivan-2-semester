@@ -5,8 +5,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.example.mikhaylovivan2semester.dto.Response;
-import org.example.mikhaylovivan2semester.dto.request.CreateCatalogRequest;
+import org.example.mikhaylovivan2semester.dto.request.AddCatalogToUserRequest;
+import org.example.mikhaylovivan2semester.dto.request.create.CreateCatalogRequest;
 import org.example.mikhaylovivan2semester.entity.Catalog;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +37,7 @@ public interface CatalogApiDocumentation {
   })
   @GetMapping("/user/{userId}")
   ResponseEntity<Response<List<Catalog>>> getUserCatalogs(
-      @Parameter(description = "User ID", required = true) @PathVariable UUID userId
+      @Parameter(description = "User ID", required = true) @PathVariable @NotNull UUID userId // Добавлено @NotNull
   );
 
   @Operation(summary = "Check if catalog exists by getName", description = "Check whether a catalog with the specified getName exists")
@@ -43,18 +47,18 @@ public interface CatalogApiDocumentation {
   })
   @GetMapping("/exists")
   ResponseEntity<Response<Boolean>> existsByName(
-      @Parameter(description = "Catalog getName", required = true) @RequestParam String name
+      @Parameter(description = "Catalog name", required = true) @RequestParam String name
   );
 
-  @Operation(summary = "Get catalog by getName", description = "Fetch a catalog by its getName")
+  @Operation(summary = "Get catalog by name", description = "Fetch a catalog by its name")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Catalog with specified getName"),
+      @ApiResponse(responseCode = "200", description = "Catalog with specified name"),
       @ApiResponse(responseCode = "404", description = "Catalog not found")
   })
-  @GetMapping("/name")
+  @GetMapping("/user/{userId}/by-name")
   ResponseEntity<Response<Optional<Catalog>>> getByName(
-      @Parameter(description = "User ID", required = true) @RequestParam UUID userId,
-      @Parameter(description = "Catalog getName", required = true) @RequestParam String name
+      @PathVariable UUID userId,
+      @RequestParam String name
   );
 
   @Operation(summary = "Delete catalog by getName", description = "Delete a catalog by its getName")
@@ -64,18 +68,8 @@ public interface CatalogApiDocumentation {
   })
   @DeleteMapping("/delete")
   ResponseEntity<Response<Void>> deleteByName(
-      @Parameter(description = "User ID", required = true) @RequestParam UUID userId,
-      @Parameter(description = "Catalog getName", required = true) @RequestParam String name
-  );
-
-  @Operation(summary = "Add catalog to user", description = "Associate a catalog with a user by their ID")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Catalog added to user"),
-      @ApiResponse(responseCode = "400", description = "Bad request")
-  })
-  @PutMapping("/addToUser")
-  ResponseEntity<Response<Catalog>> addToUser(
-      @RequestBody CreateCatalogRequest catalogRequest
+      @Parameter(description = "User ID", required = true) @RequestParam @NotNull UUID userId,
+      @Parameter(description = "Catalog name", required = true) @RequestParam @NotBlank String name
   );
 
   @Operation(summary = "Add a new catalog for a user", description = "Create and add a new catalog to a user")
@@ -83,8 +77,11 @@ public interface CatalogApiDocumentation {
       @ApiResponse(responseCode = "200", description = "New catalog added to user"),
       @ApiResponse(responseCode = "400", description = "Bad request")
   })
-  @PutMapping("/addUserCatalog")
-  ResponseEntity<Response<Catalog>> addUserCatalog(
+  @PostMapping("/create")
+  ResponseEntity<Response<Catalog>> createCatalog(
       @RequestBody CreateCatalogRequest catalogRequest
   );
+
+  @PutMapping("/addToUser")
+  ResponseEntity<Response<Catalog>> addToUser(@RequestBody @Valid AddCatalogToUserRequest request);
 }

@@ -3,7 +3,7 @@ package org.example.mikhaylovivan2semester.controller;
 import jakarta.validation.constraints.NotBlank;
 import org.example.mikhaylovivan2semester.controller.apidocumentation.WebsiteApiDocumentation;
 import org.example.mikhaylovivan2semester.dto.Response;
-import org.example.mikhaylovivan2semester.dto.request.CreateWebsiteRequest;
+import org.example.mikhaylovivan2semester.dto.request.create.CreateWebsiteRequest;
 import org.example.mikhaylovivan2semester.entity.Website;
 import org.example.mikhaylovivan2semester.service.interfaces.WebsiteService;
 import org.springframework.beans.factory.annotation.Autowired;
