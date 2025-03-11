@@ -26,7 +26,7 @@ public class DatabaseConfig {
     config.setDriverClassName("org.postgresql.Driver");
     config.setJdbcUrl("jdbc:postgresql://localhost:5432/mydb");
     config.setUsername("postgres");
-    config.setPassword("postgres");
+    config.setPassword(System.getenv("POSTGRES_PASSWORD"));
     config.setMaximumPoolSize(10);
     return new HikariDataSource(config);
   }
