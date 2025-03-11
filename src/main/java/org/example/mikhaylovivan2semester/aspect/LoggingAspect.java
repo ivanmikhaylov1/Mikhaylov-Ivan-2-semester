@@ -1,5 +1,6 @@
 package org.example.mikhaylovivan2semester.aspect;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
 
+@Getter
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class LoggingAspect {
+  private int counter = 0;
 
   @Pointcut("within(org.example.mikhaylovivan2semester.controller..*)")
   public void controllerMethods() {
@@ -33,11 +36,19 @@ public class LoggingAspect {
   public void databaseMethods() {
   }
 
+  @Before("controllerMethods()")
+  public void beforeController(JoinPoint joinPoint) {
+    counter++;
+    String methodName = joinPoint.getSignature().getName();
+    log.info("[Контроллер] Вызов метода {}", methodName);
+  }
+
   @Around("controllerMethods()")
   public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {
     String methodName = joinPoint.getSignature().getName();
     try {
       Object result = joinPoint.proceed();
+      counter++;
       log.info("[Контроллер] Метод {} выполнен успешно", methodName);
       return result;
     } catch (Exception e) {
@@ -48,10 +59,12 @@ public class LoggingAspect {
 
   @Around("serviceMethods()")
   public Object logService(ProceedingJoinPoint joinPoint) throws Throwable {
+    counter++;
     String methodName = joinPoint.getSignature().getName();
     try {
       Object result = joinPoint.proceed();
       log.info("[Сервис] Метод {} выполнен успешно", methodName);
+      counter++;
       return result;
     } catch (Exception e) {
       log.error("[Сервис] Ошибка при выполнении метода {}: {}", methodName, e.getMessage());
@@ -74,6 +87,7 @@ public class LoggingAspect {
 
   @Before("controllerMethods()")
   public void logMethodName(JoinPoint joinPoint) {
+    counter++;
     System.out.println("Вызов метода: " + joinPoint.getSignature().getName());
   }
 

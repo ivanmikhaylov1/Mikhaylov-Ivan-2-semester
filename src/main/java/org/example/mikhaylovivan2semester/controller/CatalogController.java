@@ -1,7 +1,9 @@
 package org.example.mikhaylovivan2semester.controller;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.example.mikhaylovivan2semester.controller.apidocumentation.CatalogApiDocumentation;
 import org.example.mikhaylovivan2semester.dto.Response;
 import org.example.mikhaylovivan2semester.dto.request.AddCatalogToUserRequest;
@@ -10,9 +12,8 @@ import org.example.mikhaylovivan2semester.entity.Catalog;
 import org.example.mikhaylovivan2semester.service.interfaces.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
-import jakarta.validation.constraints.NotNull;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class CatalogController implements CatalogApiDocumentation {
 
   @Override
   @GetMapping("/basic")
+  @CircuitBreaker(name = "catalog-service")
   public ResponseEntity<Response<List<Catalog>>> getBasicCatalogs() {
     List<Catalog> catalogs = catalogService.getBasicCatalogs();
     return ResponseEntity.ok(new Response<>(catalogs));

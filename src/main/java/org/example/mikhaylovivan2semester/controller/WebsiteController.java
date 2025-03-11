@@ -1,5 +1,7 @@
 package org.example.mikhaylovivan2semester.controller;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.constraints.NotBlank;
 import org.example.mikhaylovivan2semester.controller.apidocumentation.WebsiteApiDocumentation;
 import org.example.mikhaylovivan2semester.dto.Response;
@@ -18,6 +20,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/websites")
 @Validated
+@RateLimiter(name = "website-service")
+@CircuitBreaker(name = "website-service")
 public class WebsiteController implements WebsiteApiDocumentation {
   private final WebsiteService websiteService;
 

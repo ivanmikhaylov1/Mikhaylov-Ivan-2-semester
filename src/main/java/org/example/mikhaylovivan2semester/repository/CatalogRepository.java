@@ -13,21 +13,21 @@ import java.util.UUID;
 
 @Repository
 public interface CatalogRepository extends JpaRepository<Catalog, UUID> {
-    @Query("SELECT c FROM Catalog c WHERE (c.userId = ?1 OR c.userId IS NULL) AND c.name = ?2")
-    Optional<Catalog> findByUserIdAndName(UUID userId, String name);
+  @Query("SELECT c FROM Catalog c WHERE (c.userId = ?1 OR c.userId IS NULL) AND c.name = ?2")
+  Optional<Catalog> findByUserIdAndName(UUID userId, String name);
 
-    void deleteByUserIdAndName(UUID userId, String name);
+  void deleteByUserIdAndName(UUID userId, String name);
 
-    boolean existsByName(String name);
+  boolean existsByName(String name);
 
-    @Query("SELECT c FROM Catalog c WHERE c.userId IS NULL")
-    List<Catalog> findBasicCatalogs();
+  @Query("SELECT c FROM Catalog c WHERE c.userId IS NULL")
+  List<Catalog> findBasicCatalogs();
 
-    @Query("SELECT c FROM Catalog c WHERE c.userId = ?1")
-    List<Catalog> findByUserId(UUID userId);
+  @Query("SELECT c FROM Catalog c WHERE c.userId = ?1")
+  List<Catalog> findByUserId(UUID userId);
 
-    @Modifying
-    @Transactional
-    @Query("INSERT INTO Catalog (id, name, userId) VALUES (?1, ?2, ?3)")
-    Catalog saveToUser(UUID id, String name, UUID userId);
+  @Modifying
+  @Transactional
+  @Query("INSERT INTO Catalog (id, name, userId) VALUES (?1, ?2, ?3)")
+  Catalog saveToUser(UUID id, String name, UUID userId);
 }

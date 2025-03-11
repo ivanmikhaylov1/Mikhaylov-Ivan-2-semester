@@ -14,18 +14,18 @@ import java.util.UUID;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
-    @NotNull List<Article> findAll();
+  @NotNull List<Article> findAll();
 
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE user_last_request SET last_request_time = ?2 WHERE user_id = ?1", nativeQuery = true)
-    void updateUserLastRequestTime(UUID userId, Timestamp timestamp);
+  @Modifying
+  @Transactional
+  @Query(value = "UPDATE user_last_request SET last_request_time = ?2 WHERE user_id = ?1", nativeQuery = true)
+  void updateUserLastRequestTime(UUID userId, Timestamp timestamp);
 
-    @Query(value = "SELECT last_request_time FROM user_last_request WHERE user_id = ?1", nativeQuery = true)
-    Timestamp getUserLastRequestTime(UUID userId);
+  @Query(value = "SELECT last_request_time FROM user_last_request WHERE user_id = ?1", nativeQuery = true)
+  Timestamp getUserLastRequestTime(UUID userId);
 
-    @Modifying
-    @Transactional
-    @Query(value = "INSERT INTO article_categories (article_id, catalog_id, website_id) VALUES (?1, ?2, ?3)", nativeQuery = true)
-    void saveArticleCategory(UUID articleId, UUID catalogId, UUID websiteId);
+  @Modifying
+  @Transactional
+  @Query(value = "INSERT INTO article_categories (article_id, catalog_id, website_id) VALUES (?1, ?2, ?3)", nativeQuery = true)
+  void saveArticleCategory(UUID articleId, UUID catalogId, UUID websiteId);
 }

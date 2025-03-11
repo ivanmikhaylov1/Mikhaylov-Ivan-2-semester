@@ -53,14 +53,10 @@ public class AuthServiceImpl implements AuthService {
     return generateToken(name);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public String generateToken(String name) {
     long now = System.currentTimeMillis();
-    return Jwts.builder()
-        .setSubject(name)
-        .setIssuedAt(new Date(now))
-        .setExpiration(new Date(now + 3600 * 1000))
+    return Jwts.builder().subject(name).issuedAt(new Date(now)).expiration(new Date(now + 3600 * 1000))
         .signWith(key)
         .compact();
   }

@@ -11,6 +11,7 @@ import java.security.Key;
 public class JwtKeyProvider {
   private final Key key;
 
+  @SuppressWarnings("deprecation")
   public JwtKeyProvider() {
     this.key = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256);
   }

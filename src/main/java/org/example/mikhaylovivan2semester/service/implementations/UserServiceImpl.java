@@ -9,9 +9,11 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -19,11 +21,27 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final RestTemplate restTemplate;
+  private final Random random = new Random();
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  public UserServiceImpl(UserRepository userRepository,
+                         PasswordEncoder passwordEncoder,
+                         RestTemplate restTemplate) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.restTemplate = restTemplate;
+  }
+
+  public void getRandomUserFromExternalAPI() {
+    int randomId = random.nextInt() * 100;
+    String url = "https://jsonplaceholder.typicode.com/users/" + randomId;
+
+    try {
+      restTemplate.getForObject(url, String.class);
+    } catch (Exception e) {
+      System.err.println("Ошибка при вызове внешнего API: " + e.getMessage());
+    }
   }
 
   @Override
