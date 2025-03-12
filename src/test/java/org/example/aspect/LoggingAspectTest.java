@@ -1,5 +1,6 @@
 package org.example.aspect;
 
+import org.example.config.TestConfig;
 import org.example.mikhaylovivan2semester.Application;
 import org.example.mikhaylovivan2semester.aspect.LoggingAspect;
 import org.example.mikhaylovivan2semester.service.implementations.UserServiceImpl;
@@ -11,7 +12,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = {Application.class, TestConfig.class})
 @ActiveProfiles("test")
 @Testcontainers
 class LoggingAspectTest {
