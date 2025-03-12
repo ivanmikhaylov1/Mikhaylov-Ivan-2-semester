@@ -52,7 +52,7 @@ class EndToEndTest {
 
   private void createTestUser() {
     String uniqueName = "Test User 10" + UUID.randomUUID();
-    User user = new User(null, uniqueName, "testpassword");
+    User user = new User(UUID.randomUUID(), uniqueName, "testpassword");
     User savedUser = userRepository.save(user);
     userId = savedUser.getId();
   }
@@ -87,7 +87,7 @@ class EndToEndTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().data()).isNotNull();
-    assertThat(response.getBody().data().size()).isGreaterThan(0);
+    assertThat(response.getBody().data()).isNotEmpty();
   }
 
   @Test

@@ -74,12 +74,8 @@ public class UserServiceImpl implements UserService {
   @Override
   @CacheEvict(value = "users", allEntries = true)
   public Optional<UserDTO> getById(UUID userId) {
-    try {
-      User user = userRepository.getReferenceById(userId);
-      return Optional.of(new UserDTO(user.getId(), user.getName()));
-    } catch (Exception e) {
-      return Optional.empty();
-    }
+    return userRepository.findById(userId)
+        .map(user -> new UserDTO(user.getId(), user.getName()));
   }
 
   @Override
