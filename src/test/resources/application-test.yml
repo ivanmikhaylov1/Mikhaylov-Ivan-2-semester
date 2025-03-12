@@ -16,11 +16,6 @@ spring:
   cloud:
     compatibility-verifier:
       enabled: false
-  datasource:
-    driver-class-name: org.postgresql.Driver
-  test:
-    database:
-      replace: none
 
 server:
   port: 8081
@@ -29,3 +24,4 @@ logging:
   level:
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
+    org.testcontainers: INFO
