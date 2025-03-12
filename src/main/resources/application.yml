@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: Mikhaylov-Ivan-2-semester
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: false
+  cache:
+    type: simple
+  sql:
+    init:
+      mode: always
+  cloud:
+    compatibility-verifier:
+      enabled: false
+  main:
+    allow-bean-definition-overriding: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      catalog-service:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+      website-service:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+  ratelimiter:
+    instances:
+      user-service:
+        limitForPeriod: 10
+        limitRefreshPeriod: 1s
+        timeoutDuration: 500ms
+      website-service:
+        limitForPeriod: 20
+        limitRefreshPeriod: 1s
+        timeoutDuration: 500ms
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /admin
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: false
