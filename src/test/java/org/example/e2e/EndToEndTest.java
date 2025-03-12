@@ -3,6 +3,7 @@ package org.example.e2e;
 import org.example.mikhaylovivan2semester.Application;
 import org.example.mikhaylovivan2semester.dto.Response;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
+import org.example.mikhaylovivan2semester.dto.request.create.CreateUserRequest;
 import org.example.mikhaylovivan2semester.entity.User;
 import org.example.mikhaylovivan2semester.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,12 +20,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
+@Testcontainers
 class EndToEndTest {
   @Autowired
   private UserRepository userRepository;
@@ -50,16 +51,16 @@ class EndToEndTest {
   }
 
   private void createTestUser() {
-    User user = new User(null, "Test User", "testpassword");
+    String uniqueName = "Test User 10" + UUID.randomUUID();
+    User user = new User(null, uniqueName, "testpassword");
     User savedUser = userRepository.save(user);
     userId = savedUser.getId();
   }
 
   @Test
   void testSaveUser() {
-    Map<String, String> requestBody = new HashMap<>();
-    requestBody.put("name", "Test User 2");
-    requestBody.put("password", "testpassword");
+    String uniqueName = "Test User " + UUID.randomUUID();
+    CreateUserRequest requestBody = new CreateUserRequest(uniqueName, "testpassword");
     ResponseEntity<Response<UserDTO>> response = restTemplate.exchange(
         baseUrl + "/users",
         HttpMethod.POST,
@@ -71,7 +72,7 @@ class EndToEndTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().data()).isNotNull();
-    assertThat(response.getBody().data().name()).isEqualTo("Test User 2");
+    assertThat(response.getBody().data().name()).isEqualTo(uniqueName);
   }
 
   @Test
@@ -80,7 +81,7 @@ class EndToEndTest {
         baseUrl + "/users",
         HttpMethod.GET,
         null,
-        new ParameterizedTypeReference<Response<List<UserDTO>>>() {
+        new ParameterizedTypeReference<>() {
         }
     );
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

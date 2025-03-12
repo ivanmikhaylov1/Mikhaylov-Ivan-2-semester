@@ -42,4 +42,8 @@ jobs:
         run: mvn clean install -DskipTests=true
 
       - name: Run tests
-        run: mvn test
+        run: mvn test -Dspring.profiles.active=test
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/test_db
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
