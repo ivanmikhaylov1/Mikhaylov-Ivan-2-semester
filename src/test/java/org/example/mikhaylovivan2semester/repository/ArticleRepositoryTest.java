@@ -39,6 +39,7 @@ class ArticleRepositoryTest {
     article.setLink("http://test.com");
     article.setCreatedAt(LocalDateTime.now());
     article.setCategory(category);
+    articleRepository.save(article);
 
     assertThat(articleRepository.findById(article.getId())).isPresent()
         .hasValueSatisfying(found -> {
@@ -46,4 +47,4 @@ class ArticleRepositoryTest {
           assertThat(found.getCategory().getId()).isEqualTo(category.getId());
         });
   }
-} 
+}
