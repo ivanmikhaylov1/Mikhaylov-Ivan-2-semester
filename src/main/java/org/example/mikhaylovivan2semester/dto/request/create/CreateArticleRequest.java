@@ -12,7 +12,7 @@ public class CreateArticleRequest {
 
   @NotBlank
   @Size(min = 10, max = 500)
-  private String description;
+  private String content;
 
   @NotBlank
   private String date;
@@ -20,9 +20,9 @@ public class CreateArticleRequest {
   @NotBlank
   private String link;
 
-  public CreateArticleRequest(String title, String description, String date, String link) {
+  public CreateArticleRequest(String title, String content, String date, String link) {
     this.title = title;
-    this.description = description;
+    this.content = content;
     this.date = date;
     this.link = link;
   }

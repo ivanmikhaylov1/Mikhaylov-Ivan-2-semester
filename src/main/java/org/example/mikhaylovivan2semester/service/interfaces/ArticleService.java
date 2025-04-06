@@ -1,5 +1,6 @@
 package org.example.mikhaylovivan2semester.service.interfaces;
 
+import org.example.mikhaylovivan2semester.dto.ArticleDTO;
 import org.example.mikhaylovivan2semester.entity.Article;
 
 import java.sql.Timestamp;
@@ -8,7 +9,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface ArticleService {
-  List<Article> getAllArticles();
+
+  List<ArticleDTO> getAllArticles();
 
   void saveArticle(Article article);
 

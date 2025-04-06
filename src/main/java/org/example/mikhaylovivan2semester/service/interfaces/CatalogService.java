@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CatalogService {
+
   Optional<Catalog> getByName(UUID userId, String name);
 
   void deleteByName(UUID userId, String name);

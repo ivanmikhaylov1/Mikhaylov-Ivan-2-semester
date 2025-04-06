@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class LoginRequest {
+
   @NotBlank
   @Size(min = 3, max = 50)
   private String name;

@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.example.mikhaylovivan2semester.controller.apidocumentation.CatalogApiDocumentation;
-import org.example.mikhaylovivan2semester.dto.Response;
+import org.example.mikhaylovivan2semester.dto.response.Response;
 import org.example.mikhaylovivan2semester.dto.request.AddCatalogToUserRequest;
 import org.example.mikhaylovivan2semester.dto.request.create.CreateCatalogRequest;
 import org.example.mikhaylovivan2semester.entity.Catalog;

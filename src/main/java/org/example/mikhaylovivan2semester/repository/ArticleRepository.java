@@ -1,6 +1,7 @@
 package org.example.mikhaylovivan2semester.repository;
 
 import org.example.mikhaylovivan2semester.entity.Article;
+import org.example.mikhaylovivan2semester.entity.ArticleCategory;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,6 +16,10 @@ import java.util.UUID;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
   @NotNull List<Article> findAll();
+
+  List<Article> findByCategory(ArticleCategory category);
+
+  List<Article> findByTitleContainingIgnoreCase(String title);
 
   @Modifying
   @Transactional

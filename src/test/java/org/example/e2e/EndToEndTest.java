@@ -2,7 +2,7 @@ package org.example.e2e;
 
 import org.example.config.TestConfig;
 import org.example.mikhaylovivan2semester.Application;
-import org.example.mikhaylovivan2semester.dto.Response;
+import org.example.mikhaylovivan2semester.dto.response.Response;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
 import org.example.mikhaylovivan2semester.dto.request.create.CreateUserRequest;
 import org.example.mikhaylovivan2semester.entity.User;
@@ -21,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -34,7 +33,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
-@Testcontainers
 class EndToEndTest {
   @Autowired
   private UserRepository userRepository;
@@ -44,6 +42,7 @@ class EndToEndTest {
   private int port;
   private String baseUrl;
   private UUID userId;
+  private String testUserName;
 
   @BeforeAll
   void setUp() {
@@ -52,8 +51,8 @@ class EndToEndTest {
   }
 
   private void createTestUser() {
-    String uniqueName = "Test User 10" + UUID.randomUUID();
-    User user = new User(UUID.randomUUID(), uniqueName, "testpassword");
+    testUserName = "Test User 10" + UUID.randomUUID();
+    User user = new User(UUID.randomUUID(), testUserName, "testpassword");
     User savedUser = userRepository.save(user);
     userId = savedUser.getId();
   }
@@ -108,7 +107,7 @@ class EndToEndTest {
   @Test
   void testGetUserByName() {
     ResponseEntity<Response<UserDTO>> response = restTemplate.exchange(
-        baseUrl + "/users/by-name?name=" + URLEncoder.encode("Test User", StandardCharsets.UTF_8),
+        baseUrl + "/users/by-name?name=" + URLEncoder.encode(testUserName, StandardCharsets.UTF_8),
         HttpMethod.GET,
         null,
         new ParameterizedTypeReference<Response<UserDTO>>() {
@@ -117,7 +116,7 @@ class EndToEndTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().data()).isNotNull();
-    assertThat(response.getBody().data().name()).isEqualTo("Test User");
+    assertThat(response.getBody().data().name()).isEqualTo(testUserName);
   }
 
   @Test

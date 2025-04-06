@@ -1,6 +1,9 @@
 package org.example.mikhaylovivan2semester.service.implementations;
 
+import org.example.mikhaylovivan2semester.entity.User;
 import org.example.mikhaylovivan2semester.entity.Website;
+import org.example.mikhaylovivan2semester.exception.WebsiteOperationException;
+import org.example.mikhaylovivan2semester.repository.UserRepository;
 import org.example.mikhaylovivan2semester.repository.WebsiteRepository;
 import org.example.mikhaylovivan2semester.service.interfaces.WebsiteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +17,14 @@ import java.util.UUID;
 
 @Service
 public class WebsiteServiceImpl implements WebsiteService {
+
   private final WebsiteRepository websiteRepository;
+  private final UserRepository userRepository;
 
   @Autowired
-  public WebsiteServiceImpl(WebsiteRepository websiteRepository) {
+  public WebsiteServiceImpl(WebsiteRepository websiteRepository, UserRepository userRepository) {
     this.websiteRepository = websiteRepository;
+    this.userRepository = userRepository;
   }
 
   @Override
@@ -28,9 +34,11 @@ public class WebsiteServiceImpl implements WebsiteService {
   }
 
   @Override
-  @Cacheable(value = "userWebsites", key = "#a0")
+  @Cacheable(value = "userWebsites", key = "#userId")
   public List<Website> getUserWebsites(UUID userId) {
-    return websiteRepository.findByUserId(userId);
+    return userRepository.findById(userId)
+        .map(websiteRepository::findByUser)
+        .orElse(List.of());
   }
 
   @Override
@@ -40,19 +48,25 @@ public class WebsiteServiceImpl implements WebsiteService {
 
   @Override
   public Optional<Website> getByName(UUID userId, String name) {
-    return websiteRepository.findByUserIdAndName(userId, name);
+    return userRepository.findById(userId)
+        .map(user -> websiteRepository.findByUserAndName(user, name))
+        .orElse(Optional.empty());
   }
 
   @Override
-  @CacheEvict(value = "userWebsites", key = "#a0")
+  @CacheEvict(value = "userWebsites", key = "#userId")
   public Website addUserWebsite(UUID userId, String name, String url) {
-    return websiteRepository.addUserWebsite(userId, name, url);
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new WebsiteOperationException("Пользователь не найден"));
+
+    return websiteRepository.addUserWebsite(user, name, url);
   }
 
   @Override
-  @CacheEvict(value = "userWebsites", key = "#a0")
+  @CacheEvict(value = "userWebsites", key = "#userId")
   public boolean deleteByName(UUID userId, String name) {
-    websiteRepository.deleteByUserIdAndName(userId, name);
+    userRepository.findById(userId)
+        .ifPresent(user -> websiteRepository.deleteByUserAndName(user, name));
     return true;
   }
 }

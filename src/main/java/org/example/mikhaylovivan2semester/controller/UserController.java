@@ -3,7 +3,7 @@ package org.example.mikhaylovivan2semester.controller;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.constraints.NotBlank;
 import org.example.mikhaylovivan2semester.controller.apidocumentation.UserApiDocumentation;
-import org.example.mikhaylovivan2semester.dto.Response;
+import org.example.mikhaylovivan2semester.dto.response.Response;
 import org.example.mikhaylovivan2semester.dto.UserDTO;
 import org.example.mikhaylovivan2semester.dto.request.create.CreateUserRequest;
 import org.example.mikhaylovivan2semester.service.interfaces.UserService;

@@ -18,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Article {
+
   @Id
   @Column(name = "article_id", updatable = false, nullable = false)
   private UUID id;
@@ -30,7 +31,7 @@ public class Article {
   @NotBlank
   @Size(min = 10, max = 500)
   @Column(name = "content", nullable = false, length = 500)
-  private String description;
+  private String content;
 
   @NotBlank
   @Column(name = "date", nullable = false)
@@ -47,10 +48,10 @@ public class Article {
   @JoinColumn(name = "category_id")
   private ArticleCategory category;
 
-  public Article(String title, String description, String date, String link) {
+  public Article(String title, String content, String date, String link) {
     this.id = UUID.randomUUID();
     this.title = title;
-    this.description = description;
+    this.content = content;
     this.date = date;
     this.link = link;
     this.createdAt = LocalDateTime.now();

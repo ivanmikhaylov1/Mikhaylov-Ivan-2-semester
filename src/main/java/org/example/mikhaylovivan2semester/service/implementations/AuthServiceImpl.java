@@ -56,7 +56,8 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public String generateToken(String name) {
     long now = System.currentTimeMillis();
-    return Jwts.builder().subject(name).issuedAt(new Date(now)).expiration(new Date(now + 3600 * 1000))
+    return Jwts.builder().subject(name).issuedAt(new Date(now))
+        .expiration(new Date(now + 3600 * 1000))
         .signWith(key)
         .compact();
   }

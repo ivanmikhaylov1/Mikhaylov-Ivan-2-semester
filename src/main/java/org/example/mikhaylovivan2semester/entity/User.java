@@ -6,19 +6,28 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
+
   @Id
   @Column(name = "id", updatable = false, nullable = false)
   private UUID id;
 
   @NotBlank
   @Size(min = 3, max = 50)
-  @Column(name = "name", nullable = false, length = 50)
+  @Column(name = "name", nullable = false, length = 50, unique = true)
   private String name;
 
   @NotBlank
@@ -26,37 +35,9 @@ public class User {
   @Column(name = "password", nullable = false)
   private String password;
 
-  public User() {
+  public User(String name, String password) {
     this.id = UUID.randomUUID();
-  }
-
-  public User(UUID id, String name, String password) {
-    this.id = id != null ? id : UUID.randomUUID();
     this.name = name;
-    this.password = password;
-  }
-
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
     this.password = password;
   }
 }

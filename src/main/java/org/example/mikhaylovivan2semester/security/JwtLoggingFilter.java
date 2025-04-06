@@ -14,7 +14,8 @@ import java.io.IOException;
 public class JwtLoggingFilter extends OncePerRequestFilter {
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
+  protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response,
+                                  @NotNull FilterChain filterChain)
       throws ServletException, IOException {
     String authHeader = request.getHeader("Authorization");
     if (authHeader != null) {

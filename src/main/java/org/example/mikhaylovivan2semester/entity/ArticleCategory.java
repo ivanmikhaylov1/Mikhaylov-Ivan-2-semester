@@ -18,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleCategory {
+
   @Id
   @Column(name = "id", updatable = false, nullable = false)
   private UUID id;
@@ -33,5 +34,9 @@ public class ArticleCategory {
   public ArticleCategory(UUID id, String name) {
     this.id = id != null ? id : UUID.randomUUID();
     this.name = name;
+  }
+
+  public ArticleCategory(String name) {
+    this(null, name);
   }
 }

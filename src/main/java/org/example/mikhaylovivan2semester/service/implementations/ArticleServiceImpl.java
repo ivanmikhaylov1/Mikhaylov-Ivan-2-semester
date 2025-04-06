@@ -1,6 +1,7 @@
 package org.example.mikhaylovivan2semester.service.implementations;
 
 import jakarta.transaction.Transactional;
+import org.example.mikhaylovivan2semester.dto.ArticleDTO;
 import org.example.mikhaylovivan2semester.entity.Article;
 import org.example.mikhaylovivan2semester.repository.ArticleRepository;
 import org.example.mikhaylovivan2semester.service.interfaces.ArticleService;
@@ -15,6 +16,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -30,8 +32,10 @@ public class ArticleServiceImpl implements ArticleService {
 
   @Override
   @Cacheable(value = "articles", key = "'all'")
-  public List<Article> getAllArticles() {
-    return articleRepository.findAll();
+  public List<ArticleDTO> getAllArticles() {
+    return articleRepository.findAll().stream()
+        .map(ArticleDTO::new)
+        .collect(Collectors.toList());
   }
 
   @Override

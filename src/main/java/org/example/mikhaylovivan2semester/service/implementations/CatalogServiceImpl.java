@@ -2,6 +2,7 @@ package org.example.mikhaylovivan2semester.service.implementations;
 
 import jakarta.transaction.Transactional;
 import org.example.mikhaylovivan2semester.entity.Catalog;
+import org.example.mikhaylovivan2semester.entity.User;
 import org.example.mikhaylovivan2semester.exception.CatalogOperationException;
 import org.example.mikhaylovivan2semester.repository.CatalogRepository;
 import org.example.mikhaylovivan2semester.repository.UserRepository;
@@ -19,22 +20,28 @@ import java.util.UUID;
 
 @Service
 public class CatalogServiceImpl implements CatalogService {
+
   private final CatalogRepository catalogRepository;
+  private final UserRepository userRepository;
 
   @Autowired
   public CatalogServiceImpl(CatalogRepository catalogRepository, UserRepository userRepository) {
     this.catalogRepository = catalogRepository;
+    this.userRepository = userRepository;
   }
 
   @Override
   public Optional<Catalog> getByName(UUID userId, String name) {
-    return catalogRepository.findByUserIdAndName(userId, name);
+    return userRepository.findById(userId)
+        .map(user -> catalogRepository.findByUserAndName(user, name))
+        .orElse(Optional.empty());
   }
 
   @Override
   @CacheEvict(value = "userCatalogs", key = "#userId")
   public void deleteByName(UUID userId, String name) {
-    catalogRepository.deleteByUserIdAndName(userId, name);
+    userRepository.findById(userId)
+        .ifPresent(user -> catalogRepository.deleteByUserAndName(user, name));
   }
 
   @Override
@@ -47,7 +54,10 @@ public class CatalogServiceImpl implements CatalogService {
       throw new CatalogOperationException("Каталог с таким именем уже существует");
     }
 
-    Catalog catalog = new Catalog(UUID.randomUUID(), name, userId);
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new CatalogOperationException("Пользователь не найден"));
+
+    Catalog catalog = new Catalog(name, user);
     return catalogRepository.save(catalog);
   }
 
@@ -65,13 +75,18 @@ public class CatalogServiceImpl implements CatalogService {
   @Override
   @Cacheable(value = "userCatalogs", key = "#userId")
   public List<Catalog> getUserCatalogs(UUID userId) {
-    return catalogRepository.findByUserId(userId);
+    return userRepository.findById(userId)
+        .map(catalogRepository::findByUser)
+        .orElse(List.of());
   }
 
   @Override
   @Transactional
   public Catalog addToUser(UUID userId, String name) {
-    Catalog catalog = new Catalog(UUID.randomUUID(), name, userId);
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new CatalogOperationException("Пользователь не найден"));
+
+    Catalog catalog = new Catalog(name, user);
     return catalogRepository.save(catalog);
   }
 }

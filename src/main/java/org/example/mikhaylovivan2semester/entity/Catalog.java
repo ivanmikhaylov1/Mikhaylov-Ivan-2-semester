@@ -1,41 +1,38 @@
 package org.example.mikhaylovivan2semester.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "catalogs")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Catalog {
+
   @Id
-  @Column(name = "catalog_id")
+  @Column(name = "catalog_id", updatable = false, nullable = false)
   private UUID catalogId;
 
   @NotBlank
   @Size(min = 3, max = 20)
-  @Column(name = "name")
+  @Column(name = "name", nullable = false, length = 20)
   private String name;
 
-  @Column(name = "user_id")
-  private UUID userId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-  public Catalog() {
-  }
-
-  public Catalog(UUID catalogId, String name, UUID userId) {
-    this.catalogId = catalogId;
+  public Catalog(String name, User user) {
+    this.catalogId = UUID.randomUUID();
     this.name = name;
-    this.userId = userId;
+    this.user = user;
   }
-
 }
 

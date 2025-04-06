@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.example.mikhaylovivan2semester.dto.Response;
+import org.example.mikhaylovivan2semester.dto.response.Response;
 import org.example.mikhaylovivan2semester.dto.request.AddCatalogToUserRequest;
 import org.example.mikhaylovivan2semester.dto.request.create.CreateCatalogRequest;
 import org.example.mikhaylovivan2semester.entity.Catalog;
@@ -37,7 +37,7 @@ public interface CatalogApiDocumentation {
   })
   @GetMapping("/user/{userId}")
   ResponseEntity<Response<List<Catalog>>> getUserCatalogs(
-      @Parameter(description = "User ID", required = true) @PathVariable @NotNull UUID userId // Добавлено @NotNull
+      @Parameter(description = "User ID", required = true) @PathVariable @NotNull UUID userId
   );
 
   @Operation(summary = "Check if catalog exists by getName", description = "Check whether a catalog with the specified getName exists")

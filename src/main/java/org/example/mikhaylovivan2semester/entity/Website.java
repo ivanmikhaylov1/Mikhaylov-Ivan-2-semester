@@ -1,73 +1,46 @@
 package org.example.mikhaylovivan2semester.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "websites")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Website {
+
   @Id
-  @Column(name = "website_id")
+  @Column(name = "website_id", updatable = false, nullable = false)
   private UUID id;
 
   @NotBlank
-  @Column(name = "name")
+  @Size(min = 3, max = 100)
+  @Column(name = "name", nullable = false, length = 100)
   private String name;
 
   @URL
-  @Size(min = 5, max = 30)
-  @Column(name = "url")
+  @Size(min = 5, max = 255)
+  @Column(name = "url", nullable = false, length = 255)
   private String url;
 
-  @Column(name = "user_id")
-  private UUID userId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-  public Website() {
-  }
-
-  public Website(UUID id, String name, String url, UUID userId) {
-    this.id = id;
+  public Website(String name, String url, User user) {
+    this.id = UUID.randomUUID();
     this.name = name;
     this.url = url;
-    this.userId = userId;
-  }
-
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getUrl() {
-    return url;
-  }
-
-  public void setUrl(String url) {
-    this.url = url;
-  }
-
-  public UUID getUserId() {
-    return userId;
-  }
-
-  public void setUserId(UUID userId) {
-    this.userId = userId;
+    this.user = user;
   }
 }

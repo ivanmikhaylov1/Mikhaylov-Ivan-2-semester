@@ -4,7 +4,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.constraints.NotBlank;
 import org.example.mikhaylovivan2semester.controller.apidocumentation.WebsiteApiDocumentation;
-import org.example.mikhaylovivan2semester.dto.Response;
+import org.example.mikhaylovivan2semester.dto.response.Response;
 import org.example.mikhaylovivan2semester.dto.request.create.CreateWebsiteRequest;
 import org.example.mikhaylovivan2semester.entity.Website;
 import org.example.mikhaylovivan2semester.service.interfaces.WebsiteService;

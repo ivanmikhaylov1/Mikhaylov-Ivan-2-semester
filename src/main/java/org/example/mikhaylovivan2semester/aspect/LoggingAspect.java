@@ -18,6 +18,7 @@ import java.time.Instant;
 @Aspect
 @Component
 public class LoggingAspect {
+
   private int counter = 0;
 
   @Pointcut("within(org.example.mikhaylovivan2semester.controller..*)")

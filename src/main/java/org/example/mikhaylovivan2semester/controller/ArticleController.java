@@ -3,7 +3,8 @@ package org.example.mikhaylovivan2semester.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.mikhaylovivan2semester.controller.apidocumentation.ArticleApiDocumentation;
-import org.example.mikhaylovivan2semester.dto.Response;
+import org.example.mikhaylovivan2semester.dto.ArticleDTO;
+import org.example.mikhaylovivan2semester.dto.response.Response;
 import org.example.mikhaylovivan2semester.dto.request.create.CreateArticleRequest;
 import org.example.mikhaylovivan2semester.entity.Article;
 import org.example.mikhaylovivan2semester.service.interfaces.ArticleService;
@@ -29,8 +30,8 @@ public class ArticleController implements ArticleApiDocumentation {
 
   @Override
   @GetMapping
-  public ResponseEntity<Response<List<Article>>> getNewArticles() {
-    List<Article> articles = articleService.getAllArticles();
+  public ResponseEntity<Response<List<ArticleDTO>>> getNewArticles() {
+    List<ArticleDTO> articles = articleService.getAllArticles();
     return ResponseEntity.ok(new Response<>(articles));
   }
 
@@ -39,7 +40,7 @@ public class ArticleController implements ArticleApiDocumentation {
   public ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody CreateArticleRequest request) {
     Article article = new Article(
         request.getTitle(),
-        request.getDescription(),
+        request.getContent(),
         request.getDate(),
         request.getLink()
     );

@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.stream.Collectors;
 
 public class DatabaseInitializer {
+
   public static void initializeTables(DataSource dataSource) {
     String sql = readSqlFile();
     try (Connection conn = dataSource.getConnection();

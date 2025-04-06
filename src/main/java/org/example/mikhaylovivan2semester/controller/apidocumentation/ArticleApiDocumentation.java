@@ -7,9 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.example.mikhaylovivan2semester.dto.Response;
+import org.example.mikhaylovivan2semester.dto.ArticleDTO;
+import org.example.mikhaylovivan2semester.dto.response.Response;
 import org.example.mikhaylovivan2semester.dto.request.create.CreateArticleRequest;
-import org.example.mikhaylovivan2semester.entity.Article;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,14 +27,15 @@ public interface ArticleApiDocumentation {
       @ApiResponse(responseCode = "200", description = "List of articles"),
       @ApiResponse(responseCode = "500", description = "Internal server error")
   })
-  ResponseEntity<Response<List<Article>>> getNewArticles();
+  ResponseEntity<Response<List<ArticleDTO>>> getNewArticles();
 
   @Operation(summary = "Create a new article", description = "Create a new article in the system")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Article created successfully"),
       @ApiResponse(responseCode = "400", description = "Bad request")
   })
-  ResponseEntity<Response<String>> saveArticle(@Valid @RequestBody CreateArticleRequest createArticleRequest);
+  ResponseEntity<Response<String>> saveArticle(
+      @Valid @RequestBody CreateArticleRequest createArticleRequest);
 
   @Operation(summary = "Update the last request time", description = "Update the last request time for the user")
   @ApiResponses(value = {

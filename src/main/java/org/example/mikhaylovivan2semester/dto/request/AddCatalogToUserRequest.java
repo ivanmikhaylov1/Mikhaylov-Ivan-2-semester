@@ -10,6 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class AddCatalogToUserRequest {
+
   @NotNull
   private UUID userId;
 

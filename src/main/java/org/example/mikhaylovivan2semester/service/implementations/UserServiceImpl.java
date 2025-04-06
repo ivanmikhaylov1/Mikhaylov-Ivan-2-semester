@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final RestTemplate restTemplate;
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
       return Optional.empty();
     }
     String encryptedPassword = passwordEncoder.encode(password);
-    User user = new User(null, name, encryptedPassword);
+    User user = new User(name, encryptedPassword);
     User savedUser = userRepository.save(user);
     return Optional.of(new UserDTO(savedUser.getId(), savedUser.getName()));
   }

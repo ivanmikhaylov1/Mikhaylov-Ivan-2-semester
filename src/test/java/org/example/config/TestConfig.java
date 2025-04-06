@@ -1,18 +1,24 @@
 package org.example.config;
 
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
-@TestConfiguration
+@Configuration
+@ActiveProfiles("test")
+@Import(EmbeddedPostgresConfig.class)
 public class TestConfig {
+
   @Bean
-  @ServiceConnection
-  public PostgreSQLContainer<?> postgreSQLContainer() {
-    return new PostgreSQLContainer<>("postgres:latest")
-        .withDatabaseName("testdb")
-        .withUsername("test")
-        .withPassword("test");
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
+  }
+
+  @Bean
+  public WebClient.Builder webClientBuilder() {
+    return WebClient.builder();
   }
 }
